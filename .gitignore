@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# JetBrains IDEs
+.idea/
+
+# Local planning notes (not for remote)
+_planning/
