@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimal platform theme for the Stage 0 placeholder. The Compose design-system
+         theme arrives in Stage 1. -->
+    <style name="Theme.AiNews" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

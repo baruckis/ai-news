@@ -1,0 +1,7 @@
+# Optional Git hooks. Install with: lefthook install
+pre-commit:
+  parallel: true
+  commands:
+    ktlint:
+      glob: "*.{kt,kts}"
+      run: ./gradlew ktlintCheck
