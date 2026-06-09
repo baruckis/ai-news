@@ -25,9 +25,10 @@ android {
             // Robolectric needs the merged resources/manifest to inflate Compose content.
             isIncludeAndroidResources = true
             all { test ->
-                // Roborazzi records reference screenshots on every run, keeping the JVM
-                // screenshot suite deterministic across machines (no cross-OS pixel diffing).
-                test.systemProperty("roborazzi.test.record", "true")
+                // Default runs VERIFY each screenshot against its committed reference and
+                // fail on any difference. Pass -Precord to (re)generate the references.
+                val roborazziMode = if (project.hasProperty("record")) "record" else "verify"
+                test.systemProperty("roborazzi.test.$roborazziMode", "true")
             }
         }
     }

@@ -17,7 +17,7 @@ import org.robolectric.RobolectricTestRunner
  * themed surface and captures a reference image per theme under `src/test/screenshots`.
  */
 @RunWith(RobolectricTestRunner::class)
-abstract class ComponentScreenshotTest {
+abstract class ScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()
 

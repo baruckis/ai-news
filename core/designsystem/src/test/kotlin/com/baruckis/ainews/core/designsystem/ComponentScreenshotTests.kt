@@ -9,7 +9,7 @@ import com.baruckis.ainews.core.designsystem.components.NewsCardSkeleton
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import org.junit.Test
 
-class AppTextScreenshotTest : ComponentScreenshotTest() {
+class AppTextScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("AppText", darkTheme = false) {
@@ -23,7 +23,7 @@ class AppTextScreenshotTest : ComponentScreenshotTest() {
         }
 }
 
-class AppButtonScreenshotTest : ComponentScreenshotTest() {
+class AppButtonScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("AppButton", darkTheme = false) {
@@ -37,7 +37,7 @@ class AppButtonScreenshotTest : ComponentScreenshotTest() {
         }
 }
 
-class AppTopBarScreenshotTest : ComponentScreenshotTest() {
+class AppTopBarScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("AppTopBar", darkTheme = false) {
@@ -51,7 +51,7 @@ class AppTopBarScreenshotTest : ComponentScreenshotTest() {
         }
 }
 
-class NewsCardSkeletonScreenshotTest : ComponentScreenshotTest() {
+class NewsCardSkeletonScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("NewsCardSkeleton", darkTheme = false) {
@@ -65,7 +65,7 @@ class NewsCardSkeletonScreenshotTest : ComponentScreenshotTest() {
         }
 }
 
-class ErrorViewScreenshotTest : ComponentScreenshotTest() {
+class ErrorViewScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("ErrorView", darkTheme = false) {
@@ -79,7 +79,7 @@ class ErrorViewScreenshotTest : ComponentScreenshotTest() {
         }
 }
 
-class EmptyViewScreenshotTest : ComponentScreenshotTest() {
+class EmptyViewScreenshotTest : ScreenshotTest() {
     @Test
     fun light() =
         snapshot("EmptyView", darkTheme = false) {

@@ -23,5 +23,8 @@ data class Grid(
     val xl: Dp = 32.dp,
 )
 
+/** Shared default spacing scale; a single stable instance avoids per-recomposition allocation. */
+val DefaultGrid = Grid()
+
 /** Provides [Grid] down the composition. */
-val LocalGrid = staticCompositionLocalOf { Grid() }
+val LocalGrid = staticCompositionLocalOf { DefaultGrid }

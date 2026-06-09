@@ -44,8 +44,8 @@ fun AppTheme(
     CompositionLocalProvider(
         LocalColors provides if (darkTheme) DarkColors else LightColors,
         LocalTypography provides DefaultTypography,
-        LocalGrid provides Grid(),
-        LocalShapes provides AppShapes(),
+        LocalGrid provides DefaultGrid,
+        LocalShapes provides DefaultShapes,
         content = content,
     )
 }

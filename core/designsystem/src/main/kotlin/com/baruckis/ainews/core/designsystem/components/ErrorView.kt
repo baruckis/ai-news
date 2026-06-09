@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.baruckis.ainews.core.designsystem.R
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 
 /**
@@ -15,14 +17,14 @@ import com.baruckis.ainews.core.designsystem.theme.AppTheme
  * fails to load and the user can try again.
  *
  * @param onRetry invoked when the retry button is tapped.
- * @param retryText label for the retry button.
+ * @param retryText label for the retry button; defaults to a localizable string resource.
  */
 @Composable
 fun ErrorView(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
-    retryText: String = "Try again",
+    retryText: String = stringResource(R.string.ds_error_retry),
 ) {
     Column(
         modifier =

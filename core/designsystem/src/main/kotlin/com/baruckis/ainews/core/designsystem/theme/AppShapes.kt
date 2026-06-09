@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
@@ -17,5 +18,11 @@ data class AppShapes(
     val button: Shape = RoundedCornerShape(12.dp),
 )
 
+/** Stroke width for hairline borders and dividers (1dp, independent of the spacing scale). */
+val HairlineBorderWidth: Dp = 1.dp
+
+/** Shared default shape set; a single stable instance avoids per-recomposition allocation. */
+val DefaultShapes = AppShapes()
+
 /** Provides [AppShapes] down the composition. */
-val LocalShapes = staticCompositionLocalOf { AppShapes() }
+val LocalShapes = staticCompositionLocalOf { DefaultShapes }

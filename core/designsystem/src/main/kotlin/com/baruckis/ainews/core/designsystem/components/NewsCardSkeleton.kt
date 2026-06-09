@@ -24,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
+import com.baruckis.ainews.core.designsystem.theme.HairlineBorderWidth
 
 private const val SHIMMER_DURATION_MS = 1200
 private const val SHIMMER_TRAVEL = 1000f
@@ -43,7 +44,7 @@ fun NewsCardSkeleton(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(),
         color = AppTheme.colors.surfacePrimary,
         shape = AppTheme.shapes.card,
-        border = BorderStroke(AppTheme.grid.xs, AppTheme.colors.border),
+        border = BorderStroke(HairlineBorderWidth, AppTheme.colors.border),
     ) {
         Column(
             modifier = Modifier.padding(AppTheme.grid.m),
