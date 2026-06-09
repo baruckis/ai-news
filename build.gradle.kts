@@ -71,11 +71,7 @@ kover {
                     // Preview-only helper: rendered solely by @Preview, never at runtime.
                     "*.designsystem.components.PreviewSupportKt",
                 )
-                annotatedBy(
-                    "dagger.hilt.android.HiltAndroidApp",
-                    // @Preview functions are tooling entry points, not runtime code.
-                    "androidx.compose.ui.tooling.preview.Preview",
-                )
+                annotatedBy("dagger.hilt.android.HiltAndroidApp")
             }
         }
         total {

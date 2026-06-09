@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
+import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -40,6 +41,11 @@ abstract class ScreenshotTest {
             }
         }
         val theme = if (darkTheme) "dark" else "light"
-        composeRule.onRoot().captureRoboImage("src/test/screenshots/${name}_$theme.png")
+        composeRule.onRoot().captureRoboImage(
+            filePath = "src/test/screenshots/${name}_$theme.png",
+            roborazziOptions = RoborazziOptions(
+                compareOptions = RoborazziOptions.CompareOptions(changeThreshold = 0.01f)
+            )
+        )
     }
 }
