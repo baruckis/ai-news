@@ -1,0 +1,27 @@
+# Detekt configuration. Builds upon the default rule set (buildUponDefaultConfig = true);
+# only deviations from the defaults are listed here.
+
+comments:
+  active: true
+  # Require KDoc on the public API of every module.
+  UndocumentedPublicClass:
+    active: true
+    searchInNestedClass: true
+    searchInInnerClass: true
+    searchInInnerObject: true
+    searchInInnerInterface: true
+    searchInProtectedClass: false
+  UndocumentedPublicFunction:
+    active: true
+    searchProtectedFunction: false
+  UndocumentedPublicProperty:
+    active: true
+    searchProtectedProperty: false
+
+style:
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+  # ktlint already owns wildcard-import formatting; avoid duplicate reports.
+  WildcardImport:
+    active: false

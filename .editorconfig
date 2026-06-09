@@ -1,0 +1,27 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+
+[*.{kt,kts}]
+ktlint_code_style = ktlint_official
+ktlint_standard_filename = disabled
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+
+# Gradle Kotlin DSL relies on property/accessor chains (e.g. libs.versions.x.get().toInt())
+# that the chain-continuation rule would otherwise force onto multiple lines.
+[*.gradle.kts]
+ktlint_standard_chain-method-continuation = disabled
+
+[*.{yml,yaml,toml,json}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

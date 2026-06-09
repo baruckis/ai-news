@@ -1,0 +1,9 @@
+# Copy this file to `local.properties` and adjust for your machine.
+# `local.properties` is git-ignored and must never be committed.
+
+# Android SDK location (set automatically by Android Studio).
+# sdk.dir=/Users/you/Library/Android/sdk
+
+# GraphQL BFF endpoint exposed to the app via BuildConfig.GRAPHQL_URL.
+# 10.0.2.2 is the host machine's localhost as seen from the Android emulator.
+GRAPHQL_URL=http://10.0.2.2:8080/graphql
