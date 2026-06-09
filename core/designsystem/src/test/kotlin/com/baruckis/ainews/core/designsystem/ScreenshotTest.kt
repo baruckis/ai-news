@@ -43,9 +43,10 @@ abstract class ScreenshotTest {
         val theme = if (darkTheme) "dark" else "light"
         composeRule.onRoot().captureRoboImage(
             filePath = "src/test/screenshots/${name}_$theme.png",
-            roborazziOptions = RoborazziOptions(
-                compareOptions = RoborazziOptions.CompareOptions(changeThreshold = 0.01f)
-            )
+            roborazziOptions =
+                RoborazziOptions(
+                    compareOptions = RoborazziOptions.CompareOptions(changeThreshold = 0.01f),
+                ),
         )
     }
 }

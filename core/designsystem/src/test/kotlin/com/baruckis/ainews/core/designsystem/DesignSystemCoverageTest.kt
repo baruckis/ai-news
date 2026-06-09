@@ -24,7 +24,6 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class DesignSystemCoverageTest {
-
     @get:Rule
     val composeRule = createComposeRule()
 
@@ -47,7 +46,7 @@ class DesignSystemCoverageTest {
                     style = TextStyle(color = Color.Red),
                     color = Color.Green,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -78,7 +77,7 @@ class DesignSystemCoverageTest {
                 AppTopBar(
                     title = "Title",
                     modifier = Modifier.fillMaxWidth(),
-                    navigationIcon = { AppText("Back") }
+                    navigationIcon = { AppText("Back") },
                 )
             }
         }
@@ -98,23 +97,16 @@ class DesignSystemCoverageTest {
         val grid = DefaultGrid
         grid.hashCode()
         grid.toString()
-        grid.equals(grid)
-        grid.equals(null)
-        grid.equals("not a grid")
         grid.copy(m = 10.dp)
 
         val shapes = DefaultShapes
         shapes.hashCode()
         shapes.toString()
-        shapes.equals(shapes)
-        shapes.equals(null)
         shapes.copy(card = shapes.button)
 
         val typography = DefaultTypography
         typography.hashCode()
         typography.toString()
-        typography.equals(typography)
-        typography.equals(null)
         typography.copy(body = typography.titleLarge)
     }
 }
