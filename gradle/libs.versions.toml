@@ -8,7 +8,7 @@ coroutines = "1.11.0"
 
 # AndroidX — pinned to the SDK-36 generation (newer releases require compileSdk 37).
 coreKtx = "1.17.0"
-activityCompose = "1.12.4"
+activityCompose = "1.13.0"
 lifecycle = "2.10.0"
 
 # DI
