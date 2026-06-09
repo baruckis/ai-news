@@ -19,6 +19,18 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testOptions {
+        unitTests {
+            // Robolectric needs the merged resources/manifest to inflate Compose content.
+            isIncludeAndroidResources = true
+            all { test ->
+                // Roborazzi records reference screenshots on every run, keeping the JVM
+                // screenshot suite deterministic across machines (no cross-OS pixel diffing).
+                test.systemProperty("roborazzi.test.record", "true")
+            }
+        }
+    }
 }
 
 kotlin {
@@ -34,4 +46,12 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
+
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.junit4)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
 }

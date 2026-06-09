@@ -1,8 +1,20 @@
 # Detekt configuration. Builds upon the default rule set (buildUponDefaultConfig = true);
 # only deviations from the defaults are listed here.
 
+naming:
+  # Jetpack Compose @Composable functions use PascalCase by convention.
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+
+complexity:
+  # Compose components legitimately take many (mostly optional) parameters.
+  LongParameterList:
+    ignoreAnnotated: ['Composable']
+
 comments:
   active: true
+  # KDoc is required on production public API only; test code is exempt.
+  excludes: ['**/test/**', '**/androidTest/**']
   # Require KDoc on the public API of every module.
   UndocumentedPublicClass:
     active: true
@@ -25,3 +37,14 @@ style:
   # ktlint already owns wildcard-import formatting; avoid duplicate reports.
   WildcardImport:
     active: false
+  # @Preview composables are tooling entry points, not dead code.
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']
+  # Design tokens are inherently numeric literals (colors, sizes, weights);
+  # allow them in property declarations. Magic numbers in logic are still flagged.
+  MagicNumber:
+    active: true
+    ignorePropertyDeclaration: true
+    ignoreNamedArgument: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotation: true
