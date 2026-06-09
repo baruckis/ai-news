@@ -53,6 +53,8 @@ kover {
         filters {
             excludes {
                 // Android entry points and generated code carry no testable logic.
+                // Real composables are NOT excluded: the design-system components are
+                // exercised by the Roborazzi screenshot tests, so they are measured here.
                 classes(
                     "*.BuildConfig",
                     "com.baruckis.ainews.AiNewsApplication",
@@ -66,11 +68,10 @@ kover {
                     "hilt_aggregated_deps.*",
                     "dagger.hilt.*",
                     "*Hilt_*",
+                    // Preview-only helper: rendered solely by @Preview, never at runtime.
+                    "*.designsystem.components.PreviewSupportKt",
                 )
-                annotatedBy(
-                    "dagger.hilt.android.HiltAndroidApp",
-                    "androidx.compose.runtime.Composable",
-                )
+                annotatedBy("dagger.hilt.android.HiltAndroidApp")
             }
         }
         total {
