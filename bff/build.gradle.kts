@@ -11,7 +11,25 @@ version = "0.1.0"
 
 application {
     // Entry point started by `gradlew :bff:run` and packaged by `buildFatJar`.
-    mainClass.set("com.baruckis.ainews.bff.ApplicationKt")
+    // `fun main()` lives in Main.kt, which compiles to MainKt.
+    mainClass.set("com.baruckis.ainews.bff.MainKt")
+}
+
+kover {
+    // Main.kt is the composition root (server bootstrap + environment wiring) with no
+    // testable logic, mirroring how the :app entry points are excluded in the root build.
+    // Excluding it here keeps it out of this module's own report too, so it never counts
+    // against patch coverage regardless of which report is consumed.
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "com.baruckis.ainews.bff.MainKt",
+                    "com.baruckis.ainews.bff.MainKt\$*",
+                )
+            }
+        }
+    }
 }
 
 java {
