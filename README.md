@@ -31,6 +31,7 @@ stage by stage, each stage reviewed before merge.
 :core:designsystem    theme, tokens, components
 :core:testing         shared test helpers and fakes
 :feature:news         news list + detail (data / domain / ui)
+:bff                  Kotlin GraphQL BFF (Ktor + graphql-kotlin), separate from the Android build
 ```
 
 Dependency rule: `:app → :feature:* → :core:*`; `:core:model` depends on nothing, and domain code
@@ -53,15 +54,40 @@ cp local.properties.example local.properties
 
 `GRAPHQL_URL` is read from `local.properties` and exposed via `BuildConfig` — it is never
 hard-coded or committed. The emulator-localhost default (`http://10.0.2.2:8080/graphql`) points at
-the local BFF that arrives in a later stage.
+the local BFF (see below).
+
+## Run the BFF locally
+
+The `:bff` module is a standalone Kotlin GraphQL server (Ktor + graphql-kotlin) that hides the
+news-provider API key behind your own endpoint. It serves **real** AI news from
+[NewsData.io](https://newsdata.io/) (with an optional [GNews](https://gnews.io/) fallback).
+
+```bash
+# 1. Provide your secrets (bff/.env is gitignored — never commit it).
+cp bff/.env.example bff/.env
+# edit bff/.env and set NEWSDATA_KEY=<your key from newsdata.io>
+
+# 2. Start the server on http://localhost:8080 (reads bff/.env into the environment).
+set -a; . bff/.env; set +a
+./gradlew :bff:run        # or: ./gradlew :bff:buildFatJar && java -jar bff/build/libs/bff-all.jar
+
+# 3. Query it.
+curl -s http://localhost:8080/graphql \
+  -H 'content-type: application/json' \
+  -d '{"query":"{ aiNews { articles { id title sourceName publishedAt } } }"}'
+```
+
+Open `http://localhost:8080/graphiql` for the interactive explorer, or `GET /sdl` for the schema.
+The key is read only from the environment (`NEWSDATA_KEY`); `NEWS_TIMEFRAME` is optional and
+requires a paid NewsData plan, so the free tier returns the latest news by default.
 
 ## Status — planned stages
 
 Built in numbered stages; each stage is a single reviewed pull request.
 
 - [x] **Stage 0** — Repo bootstrap, multi-module Gradle skeleton, CI with quality + coverage gates
-- [ ] **Stage 1** — Design system (light/dark theme, tokens, components)
-- [ ] **Stage 2** — Kotlin BFF (Ktor + graphql-kotlin) serving real AI news
+- [x] **Stage 1** — Design system (light/dark theme, tokens, components)
+- [x] **Stage 2** — Kotlin BFF (Ktor + graphql-kotlin) serving real AI news
 - [ ] **Stage 3** — BFF deployment
 - [ ] **Stage 4** — `:core:network` (Apollo Kotlin 5, normalized cache)
 - [ ] **Stage 5** — `:core:mvi` + `:core:model`
