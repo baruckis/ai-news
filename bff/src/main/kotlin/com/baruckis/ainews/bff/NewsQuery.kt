@@ -10,9 +10,15 @@ import com.expediagroup.graphql.server.operations.Query
 class NewsQuery(
     private val newsService: NewsService,
 ) : Query {
-    /** AI news for the configured timeframe (default one week), newest first. */
-    @GraphQLDescription("AI news for the configured timeframe (default one week), newest first.")
-    suspend fun aiNews(page: Int? = 1): NewsConnection = newsService.fetchAiNews(page ?: 1)
+    /**
+     * AI news for the configured timeframe (default one week), newest first. Pass the previous
+     * result's `nextPage` value as [cursor] to page forward; omit it for the first page.
+     */
+    @GraphQLDescription(
+        "AI news for the configured timeframe (default one week), newest first. " +
+            "Pass the previous result's nextPage value as `cursor` to page forward.",
+    )
+    suspend fun aiNews(cursor: String? = null): NewsConnection = newsService.fetchAiNews(cursor)
 
     /** A single article by its [id], or null when it is not in the latest results. */
     @GraphQLDescription("A single article by id.")

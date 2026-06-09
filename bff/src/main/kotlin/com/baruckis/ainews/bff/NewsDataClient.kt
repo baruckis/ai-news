@@ -5,12 +5,8 @@ import com.baruckis.ainews.bff.model.NewsConnection
 import com.expediagroup.graphql.generator.scalars.ID
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -19,9 +15,9 @@ import java.time.format.DateTimeFormatter
 /**
  * [NewsService] backed by NewsData.io, with a GNews fallback on error or empty results.
  *
- * The API key, optional GNews key and timeframe are read from the environment via
- * [fromEnvironment]. The last [fetchAiNews] result is cached in memory so [fetchArticle]
- * does not spend extra upstream quota.
+ * The API key, optional GNews key and timeframe are supplied by the caller (production
+ * wiring lives in [newsDataClientFromEnvironment]). The last [fetchAiNews] result is cached
+ * in memory so [fetchArticle] does not spend extra upstream quota.
  *
  * [timeframe] is optional and only sent when non-blank: NewsData.io's `timeframe`
  * parameter requires a paid plan, so the free tier (which returns the latest news) is the
@@ -36,9 +32,9 @@ class NewsDataClient(
     @Volatile
     private var lastArticles: List<Article> = emptyList()
 
-    override suspend fun fetchAiNews(page: Int): NewsConnection {
+    override suspend fun fetchAiNews(cursor: String?): NewsConnection {
         val connection =
-            runCatching { fetchFromNewsData() }
+            runCatching { fetchFromNewsData(cursor) }
                 .getOrNull()
                 ?.takeIf { it.articles.isNotEmpty() }
                 ?: fetchFromGNews()
@@ -47,11 +43,14 @@ class NewsDataClient(
     }
 
     override suspend fun fetchArticle(id: String): Article? {
-        if (lastArticles.isEmpty()) fetchAiNews(DEFAULT_PAGE)
+        if (lastArticles.isEmpty()) fetchAiNews(cursor = null)
         return lastArticles.firstOrNull { it.id.value == id }
     }
 
-    private suspend fun fetchFromNewsData(): NewsConnection {
+    /** Releases the underlying HTTP client's connection pool and dispatcher. */
+    override fun close() = httpClient.close()
+
+    private suspend fun fetchFromNewsData(cursor: String?): NewsConnection {
         val response: NewsDataResponse =
             httpClient
                 .get(NEWSDATA_URL) {
@@ -60,6 +59,8 @@ class NewsDataClient(
                     parameter("category", CATEGORY)
                     parameter("language", LANGUAGE)
                     if (!timeframe.isNullOrBlank()) parameter("timeframe", timeframe)
+                    // NewsData.io is cursor-based: its `page` parameter is the nextPage token.
+                    if (!cursor.isNullOrBlank()) parameter("page", cursor)
                 }.body()
         check(response.status == null || response.status == STATUS_SUCCESS) {
             "NewsData returned status=${response.status}"
@@ -129,7 +130,6 @@ class NewsDataClient(
         private const val LANGUAGE = "en"
         private const val STATUS_SUCCESS = "success"
         private const val UNKNOWN_SOURCE = "Unknown"
-        private const val DEFAULT_PAGE = 1
 
         // NewsData.io returns timestamps as "yyyy-MM-dd HH:mm:ss" in UTC.
         private val NEWSDATA_DATE_FORMAT: DateTimeFormatter =
@@ -141,24 +141,5 @@ class NewsDataClient(
                     LocalDateTime.parse(it, NEWSDATA_DATE_FORMAT).toInstant(ZoneOffset.UTC)
                 }.getOrNull()
             }
-
-        /** Builds a client from environment variables (`NEWSDATA_KEY`, `GNEWS_KEY`, `NEWS_TIMEFRAME`). */
-        fun fromEnvironment(): NewsDataClient {
-            val apiKey =
-                System.getenv("NEWSDATA_KEY")
-                    ?: error("NEWSDATA_KEY environment variable is required")
-            val httpClient =
-                HttpClient(CIO) {
-                    install(ContentNegotiation) {
-                        json(Json { ignoreUnknownKeys = true })
-                    }
-                }
-            return NewsDataClient(
-                httpClient = httpClient,
-                newsDataApiKey = apiKey,
-                gnewsApiKey = System.getenv("GNEWS_KEY"),
-                timeframe = System.getenv("NEWS_TIMEFRAME"),
-            )
-        }
     }
 }

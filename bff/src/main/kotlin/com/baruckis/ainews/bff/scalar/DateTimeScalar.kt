@@ -6,6 +6,9 @@ import graphql.execution.CoercedVariables
 import graphql.language.StringValue
 import graphql.language.Value
 import graphql.schema.Coercing
+import graphql.schema.CoercingParseLiteralException
+import graphql.schema.CoercingParseValueException
+import graphql.schema.CoercingSerializeException
 import graphql.schema.GraphQLScalarType
 import graphql.schema.GraphQLType
 import java.time.Instant
@@ -18,20 +21,34 @@ object InstantCoercing : Coercing<Instant, String> {
         dataFetcherResult: Any,
         graphQLContext: GraphQLContext,
         locale: Locale,
-    ): String = (dataFetcherResult as Instant).toString()
+    ): String =
+        (dataFetcherResult as? Instant)?.toString()
+            ?: throw CoercingSerializeException(
+                "Expected a java.time.Instant but was ${dataFetcherResult::class.simpleName}.",
+            )
 
     override fun parseValue(
         input: Any,
         graphQLContext: GraphQLContext,
         locale: Locale,
-    ): Instant = Instant.parse(input.toString())
+    ): Instant =
+        runCatching { Instant.parse(input.toString()) }
+            .getOrElse { throw CoercingParseValueException("Invalid DateTime value: '$input'.", it) }
 
     override fun parseLiteral(
         input: Value<*>,
         variables: CoercedVariables,
         graphQLContext: GraphQLContext,
         locale: Locale,
-    ): Instant = Instant.parse((input as StringValue).value)
+    ): Instant {
+        val literal =
+            (input as? StringValue)
+                ?: throw CoercingParseLiteralException(
+                    "Expected a string literal but was ${input::class.simpleName}.",
+                )
+        return runCatching { Instant.parse(literal.value) }
+            .getOrElse { throw CoercingParseLiteralException("Invalid DateTime literal: '${literal.value}'.", it) }
+    }
 }
 
 /** The custom `DateTime` GraphQL scalar backed by [InstantCoercing]. */

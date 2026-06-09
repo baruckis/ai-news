@@ -30,17 +30,29 @@ class NewsQueryTest {
             publishedAt = Instant.parse("2026-06-01T12:30:00Z"),
         )
 
-    private val fakeService =
-        object : NewsService {
-            override suspend fun fetchAiNews(page: Int) = NewsConnection(listOf(sample), "cursor-2")
+    /** Records the cursor it was last called with and whether it was closed. */
+    private class RecordingService(
+        private val article: Article,
+    ) : NewsService {
+        var lastCursor: String? = "UNSET"
+        var closed: Boolean = false
 
-            override suspend fun fetchArticle(id: String) = sample.takeIf { it.id.value == id }
+        override suspend fun fetchAiNews(cursor: String?): NewsConnection {
+            lastCursor = cursor
+            return NewsConnection(listOf(article), "cursor-2")
         }
+
+        override suspend fun fetchArticle(id: String): Article? = article.takeIf { it.id.value == id }
+
+        override fun close() {
+            closed = true
+        }
+    }
 
     @Test
     fun `aiNews returns articles with the DateTime scalar serialized`() =
         testApplication {
-            application { bffModule(fakeService) }
+            application { bffModule(RecordingService(sample)) }
 
             val response =
                 client.post("/graphql") {
@@ -57,9 +69,37 @@ class NewsQueryTest {
         }
 
     @Test
+    fun `aiNews forwards the cursor argument to the service`() =
+        testApplication {
+            val service = RecordingService(sample)
+            application { bffModule(service) }
+
+            client.post("/graphql") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"query":"{ aiNews(cursor: \"page-7\") { articles { id } } }"}""")
+            }
+
+            assertEquals("page-7", service.lastCursor)
+        }
+
+    @Test
+    fun `aiNews without a cursor passes null to the service`() =
+        testApplication {
+            val service = RecordingService(sample)
+            application { bffModule(service) }
+
+            client.post("/graphql") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"query":"{ aiNews { articles { id } } }"}""")
+            }
+
+            assertEquals(null, service.lastCursor)
+        }
+
+    @Test
     fun `article resolves a known id and null for an unknown id`() =
         testApplication {
-            application { bffModule(fakeService) }
+            application { bffModule(RecordingService(sample)) }
 
             val found =
                 client
@@ -81,10 +121,20 @@ class NewsQueryTest {
     @Test
     fun `SDL route exposes the schema with the DateTime scalar`() =
         testApplication {
-            application { bffModule(fakeService) }
+            application { bffModule(RecordingService(sample)) }
 
             val sdl = client.get("/sdl").bodyAsText()
             assertTrue(sdl.contains("scalar DateTime"), sdl)
             assertTrue(sdl.contains("aiNews"), sdl)
         }
+
+    @Test
+    fun `closes the news service when the application stops`() {
+        val service = RecordingService(sample)
+        testApplication {
+            application { bffModule(service) }
+            client.get("/sdl")
+        }
+        assertTrue(service.closed, "expected the service to be closed on ApplicationStopped")
+    }
 }

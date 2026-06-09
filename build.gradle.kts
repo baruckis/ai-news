@@ -28,6 +28,7 @@ dependencies {
     kover(project(":core:designsystem"))
     kover(project(":core:testing"))
     kover(project(":feature:news"))
+    kover(project(":bff"))
 }
 
 subprojects {
@@ -60,6 +61,9 @@ kover {
                     "com.baruckis.ainews.AiNewsApplication",
                     "com.baruckis.ainews.MainActivity",
                     "com.baruckis.ainews.MainActivity\$*",
+                    // BFF composition root: server bootstrap + environment wiring, no testable logic.
+                    "com.baruckis.ainews.bff.MainKt",
+                    "com.baruckis.ainews.bff.MainKt\$*",
                     "*ComposableSingletons*",
                     "*_Factory",
                     "*_Factory\$*",
