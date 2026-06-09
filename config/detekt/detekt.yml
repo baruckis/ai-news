@@ -40,6 +40,9 @@ style:
   # @Preview composables are tooling entry points, not dead code.
   UnusedPrivateMember:
     ignoreAnnotated: ['Preview']
+  # Leading `?: return null` guard clauses (e.g. DTO mapping) read better than nesting.
+  ReturnCount:
+    excludeGuardClauses: true
   # Design tokens are inherently numeric literals (colors, sizes, weights);
   # allow them in property declarations. Magic numbers in logic are still flagged.
   MagicNumber:
