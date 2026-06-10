@@ -46,4 +46,10 @@ abstract class MviViewModel<S : UiState, I : Intent, E : Effect>(
 
     /** Single entry point: the UI funnels every user/system action through here. */
     abstract fun onIntent(intent: I)
+
+    /** Closes the effects channel so [effects] collectors get a terminal signal on destruction. */
+    override fun onCleared() {
+        super.onCleared()
+        _effects.close()
+    }
 }

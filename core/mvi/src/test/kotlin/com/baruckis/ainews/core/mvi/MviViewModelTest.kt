@@ -1,5 +1,6 @@
 package com.baruckis.ainews.core.mvi
 
+import androidx.lifecycle.ViewModelStore
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,10 +42,13 @@ class MviViewModelTest {
         }
     }
 
+    // Shared by setMain and runTest so both run on a single TestCoroutineScheduler.
+    private val testDispatcher = UnconfinedTestDispatcher()
+
     @BeforeEach
     fun setUp() {
         // viewModelScope launches on Dispatchers.Main, which has no implementation in JVM tests.
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+        Dispatchers.setMain(testDispatcher)
     }
 
     @AfterEach
@@ -54,7 +58,7 @@ class MviViewModelTest {
 
     @Test
     fun `state starts with the initial value`() =
-        runTest {
+        runTest(testDispatcher) {
             val viewModel = CounterViewModel()
 
             assertEquals(CounterState(count = 0), viewModel.state.value)
@@ -62,7 +66,7 @@ class MviViewModelTest {
 
     @Test
     fun `setState reduces the current state and publishes it`() =
-        runTest {
+        runTest(testDispatcher) {
             val viewModel = CounterViewModel()
 
             viewModel.state.test {
@@ -78,7 +82,7 @@ class MviViewModelTest {
 
     @Test
     fun `sendEffect emits to the effects flow with the current state visible`() =
-        runTest {
+        runTest(testDispatcher) {
             val viewModel = CounterViewModel()
             viewModel.onIntent(CounterIntent.Increment)
 
@@ -92,7 +96,7 @@ class MviViewModelTest {
 
     @Test
     fun `effects are buffered while uncollected and delivered exactly once`() =
-        runTest {
+        runTest(testDispatcher) {
             val viewModel = CounterViewModel()
 
             // Sent before anyone collects — must not be lost.
@@ -110,6 +114,20 @@ class MviViewModelTest {
             viewModel.effects.test {
                 expectNoEvents()
                 cancel()
+            }
+        }
+
+    @Test
+    fun `effects flow completes when the ViewModel is cleared`() =
+        runTest(testDispatcher) {
+            val viewModel = CounterViewModel()
+            val store = ViewModelStore().apply { put("counter", viewModel) }
+
+            viewModel.effects.test {
+                store.clear()
+
+                // Closing the channel on onCleared gives collectors a terminal signal.
+                awaitComplete()
             }
         }
 }

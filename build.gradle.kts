@@ -75,6 +75,10 @@ kover {
                     "*Hilt_*",
                     // Preview-only helper: rendered solely by @Preview, never at runtime.
                     "*.designsystem.components.PreviewSupportKt",
+                    // Pure domain data holders (:core:model): no logic, only compiler-generated
+                    // equals/hashCode/copy/toString. The values they carry are asserted through
+                    // the data-layer mapper tests (Stage 6).
+                    "com.baruckis.ainews.core.model.*",
                     // Apollo codegen output (queries, fragments, adapters) — generated code.
                     "com.baruckis.ainews.core.network.graphql.*",
                     // DI wiring (Android Context + SQLite cache) and its Dagger-generated
