@@ -5,5 +5,7 @@
 # sdk.dir=/Users/you/Library/Android/sdk
 
 # GraphQL BFF endpoint exposed to the app via BuildConfig.GRAPHQL_URL.
-# 10.0.2.2 is the host machine's localhost as seen from the Android emulator.
-GRAPHQL_URL=http://10.0.2.2:8080/graphql
+GRAPHQL_URL=https://ainews-api.baruckis.com/graphql
+# To use a locally running BFF from the Android emulator instead
+# (10.0.2.2 is the host machine's localhost as seen from the emulator):
+# GRAPHQL_URL=http://10.0.2.2:8080/graphql
