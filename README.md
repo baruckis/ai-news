@@ -106,7 +106,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 1** — Design system (light/dark theme, tokens, components)
 - [x] **Stage 2** — Kotlin BFF (Ktor + graphql-kotlin) serving real AI news
 - [x] **Stage 3** — BFF deployment
-- [ ] **Stage 4** — `:core:network` (Apollo Kotlin 5, normalized cache)
+- [x] **Stage 4** — `:core:network` (Apollo Kotlin 5, normalized cache)
 - [ ] **Stage 5** — `:core:mvi` + `:core:model`
 - [ ] **Stage 6** — `:feature:news` data + domain
 - [ ] **Stage 7** — News list screen
