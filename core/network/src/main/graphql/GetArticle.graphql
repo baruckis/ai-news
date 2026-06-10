@@ -1,0 +1,14 @@
+# Fetches the full detail of a single article by id (null when not found).
+query GetArticle($id: ID!) {
+  article(id: $id) {
+    id
+    title
+    description
+    content
+    imageUrl
+    sourceName
+    author
+    url
+    publishedAt
+  }
+}

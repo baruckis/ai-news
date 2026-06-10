@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.apollo) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kover)
@@ -74,6 +75,11 @@ kover {
                     "*Hilt_*",
                     // Preview-only helper: rendered solely by @Preview, never at runtime.
                     "*.designsystem.components.PreviewSupportKt",
+                    // Apollo codegen output (queries, fragments, adapters) — generated code.
+                    "com.baruckis.ainews.core.network.graphql.*",
+                    // DI wiring (Android Context + SQLite cache) and its Dagger-generated
+                    // Module_Provide*Factory companions; no testable logic.
+                    "com.baruckis.ainews.core.network.di.*",
                 )
                 annotatedBy("dagger.hilt.android.HiltAndroidApp")
             }

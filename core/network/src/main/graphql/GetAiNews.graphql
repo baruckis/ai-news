@@ -1,0 +1,20 @@
+# Fetches one page of AI news for the list screen. Pass the previous result's
+# nextPage value as $cursor to page forward; null fetches the first page.
+query GetAiNews($cursor: String) {
+  aiNews(cursor: $cursor) {
+    articles {
+      ...ArticleListItem
+    }
+    nextPage
+  }
+}
+
+# Summary fields only — the detail screen fetches the full article via GetArticle.
+fragment ArticleListItem on Article {
+  id
+  title
+  description
+  imageUrl
+  sourceName
+  publishedAt
+}
