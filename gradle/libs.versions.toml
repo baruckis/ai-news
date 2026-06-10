@@ -15,6 +15,13 @@ lifecycle = "2.10.0"
 hilt = "2.59.2"
 hiltNavigationCompose = "1.3.0"
 
+# GraphQL client (Apollo Kotlin). The normalized cache, scalar adapters and mock server
+# live in their own repositories and are versioned independently of the main artifacts.
+apollo = "5.0.0"
+apolloNormalizedCache = "1.0.3"
+apolloAdapters = "0.7.0"
+apolloMockserver = "0.3.1"
+
 # BFF (Ktor + graphql-kotlin) — Ktor pinned to the version graphql-kotlin 10 ships with.
 ktor = "3.4.1"
 graphqlKotlin = "10.0.0"
@@ -70,6 +77,13 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
+# GraphQL client (Apollo Kotlin 5 + companion libraries)
+apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+apollo-api = { module = "com.apollographql.apollo:apollo-api", version.ref = "apollo" }
+apollo-normalized-cache-sqlite = { module = "com.apollographql.cache:normalized-cache-sqlite", version.ref = "apolloNormalizedCache" }
+apollo-adapters-core = { module = "com.apollographql.adapters:apollo-adapters-core", version.ref = "apolloAdapters" }
+apollo-mockserver = { module = "com.apollographql.mockserver:apollo-mockserver", version.ref = "apolloMockserver" }
+
 # Testing (wired into the catalog now, used from later stages)
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit" }
@@ -105,6 +119,7 @@ ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
