@@ -1,0 +1,5 @@
+# Caddy obtains and renews the Let's Encrypt certificate for this host
+# automatically. `bff` resolves through the Docker Compose network.
+ainews-api.baruckis.com {
+	reverse_proxy bff:8080
+}

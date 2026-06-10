@@ -1,0 +1,37 @@
+# AI News BFF behind Caddy (automatic HTTPS via Let's Encrypt).
+# Run from this directory on the server: docker compose up -d --build
+# Secrets come from ./.env (copy .env.example) — never committed.
+
+services:
+  bff:
+    build:
+      # The Gradle build needs the whole repo, so the context is the repo root.
+      context: ..
+      dockerfile: bff/Dockerfile
+    environment:
+      - NEWSDATA_KEY=${NEWSDATA_KEY}
+      - GNEWS_KEY=${GNEWS_KEY}
+      # Single-dash default: applies only when the variable is UNSET. An explicitly
+      # empty NEWS_TIMEFRAME= in .env stays empty, which makes the BFF omit the
+      # parameter (required on the NewsData.io free tier — see .env.example).
+      - NEWS_TIMEFRAME=${NEWS_TIMEFRAME-168h}
+    expose:
+      - "8080" # internal only — Caddy is the sole public entry point
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # TLS certificates — must persist across restarts
+      - caddy_config:/config
+    depends_on:
+      - bff
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
