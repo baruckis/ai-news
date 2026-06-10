@@ -11,6 +11,7 @@ import com.baruckis.ainews.core.network.GqlApiLayer
 import com.baruckis.ainews.core.network.GraphQlOperationException
 import com.baruckis.ainews.core.network.RequestResult
 import com.baruckis.ainews.core.network.graphql.GetAiNewsQuery
+import com.baruckis.ainews.feature.news.domain.repository.NewsRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull

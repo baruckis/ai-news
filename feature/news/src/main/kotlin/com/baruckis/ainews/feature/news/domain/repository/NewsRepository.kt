@@ -1,12 +1,13 @@
-package com.baruckis.ainews.feature.news.data
+package com.baruckis.ainews.feature.news.domain.repository
 
 import com.baruckis.ainews.core.model.Article
 import com.baruckis.ainews.core.model.ArticleSummary
 import com.baruckis.ainews.core.network.RequestResult
 
 /**
- * Single source of news data for the feature: use cases and ViewModels go through this
- * interface, never through Apollo or [com.baruckis.ainews.core.network.GqlApiLayer] directly.
+ * Domain-side contract for news data: use cases and ViewModels depend on this interface,
+ * never on Apollo or the data-layer implementation — the data package implements it,
+ * keeping the dependency direction domain ← data.
  */
 interface NewsRepository {
     /**

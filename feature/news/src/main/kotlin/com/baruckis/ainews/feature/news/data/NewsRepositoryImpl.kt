@@ -6,6 +6,7 @@ import com.baruckis.ainews.core.network.GqlApiLayer
 import com.baruckis.ainews.core.network.RequestResult
 import com.baruckis.ainews.core.network.graphql.GetAiNewsQuery
 import com.baruckis.ainews.core.network.graphql.GetArticleQuery
+import com.baruckis.ainews.feature.news.domain.repository.NewsRepository
 import javax.inject.Inject
 
 /**

@@ -2,7 +2,7 @@ package com.baruckis.ainews.feature.news.domain.usecase
 
 import com.baruckis.ainews.core.model.Article
 import com.baruckis.ainews.core.network.RequestResult
-import com.baruckis.ainews.feature.news.data.NewsRepository
+import com.baruckis.ainews.feature.news.domain.repository.NewsRepository
 import javax.inject.Inject
 
 /**
