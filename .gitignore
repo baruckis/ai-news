@@ -52,5 +52,6 @@ captures/
 # macOS
 .DS_Store
 
-# Local planning notes — personal, never push to remote
+# Local planning notes and agent guide — personal, never push to remote
 _planning/
+CLAUDE.md
