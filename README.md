@@ -53,8 +53,9 @@ cp local.properties.example local.properties
 ```
 
 `GRAPHQL_URL` is read from `local.properties` and exposed via `BuildConfig` — it is never
-hard-coded or committed. The emulator-localhost default (`http://10.0.2.2:8080/graphql`) points at
-the local BFF (see below).
+hard-coded or committed. The template defaults to the live production endpoint (see
+[Deployment](#deployment)); switch to the emulator-localhost URL (`http://10.0.2.2:8080/graphql`)
+to develop against a locally running BFF (see below).
 
 ## Run the BFF locally
 
@@ -81,6 +82,22 @@ Open `http://localhost:8080/graphiql` for the interactive explorer, or `GET /sdl
 The key is read only from the environment (`NEWSDATA_KEY`); `NEWS_TIMEFRAME` is optional and
 requires a paid NewsData plan, so the free tier returns the latest news by default.
 
+## Deployment
+
+The BFF is live at **https://ainews-api.baruckis.com/graphql** — it runs as a Docker container
+on a VPS, behind a reverse proxy that terminates TLS. The Android app points at this endpoint by
+default (`local.properties.example`).
+
+```bash
+curl https://ainews-api.baruckis.com/graphql \
+  -H 'content-type: application/json' \
+  -d '{"query":"{ aiNews { articles { id title sourceName } } }"}'
+```
+
+The [`deploy/`](deploy/) directory contains a reproducible, self-contained reference setup
+(Docker Compose + Caddy) you can use to host your own instance — see
+[deploy/README.md](deploy/README.md).
+
 ## Status — planned stages
 
 Built in numbered stages; each stage is a single reviewed pull request.
@@ -88,7 +105,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 0** — Repo bootstrap, multi-module Gradle skeleton, CI with quality + coverage gates
 - [x] **Stage 1** — Design system (light/dark theme, tokens, components)
 - [x] **Stage 2** — Kotlin BFF (Ktor + graphql-kotlin) serving real AI news
-- [ ] **Stage 3** — BFF deployment
+- [x] **Stage 3** — BFF deployment
 - [ ] **Stage 4** — `:core:network` (Apollo Kotlin 5, normalized cache)
 - [ ] **Stage 5** — `:core:mvi` + `:core:model`
 - [ ] **Stage 6** — `:feature:news` data + domain
