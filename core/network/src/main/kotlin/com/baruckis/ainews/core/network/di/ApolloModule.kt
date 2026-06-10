@@ -24,6 +24,8 @@ object ApolloModule {
      * Single [ApolloClient] for the app: BFF endpoint from `BuildConfig.GRAPHQL_URL`
      * (sourced from `local.properties`, never hard-coded) plus a SQLite normalized cache
      * with cache-first reads, so an article already seen in the list opens instantly.
+     * Callers needing fresh data (e.g. pull-to-refresh) bypass the cache per call with
+     * `GqlApiLayer.query(forceRefresh = true)`.
      */
     @Provides
     @Singleton

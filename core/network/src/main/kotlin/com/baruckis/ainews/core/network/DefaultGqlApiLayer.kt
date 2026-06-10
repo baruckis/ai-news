@@ -2,7 +2,10 @@ package com.baruckis.ainews.core.network
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Query
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * [GqlApiLayer] backed by an [ApolloClient].
@@ -18,9 +21,11 @@ class DefaultGqlApiLayer
     ) : GqlApiLayer {
         override suspend fun <D : Query.Data, R> query(
             query: Query<D>,
+            forceRefresh: Boolean,
             transform: (D) -> R,
         ): RequestResult<R> {
-            val response = client.query(query).execute()
+            val call = client.query(query)
+            val response = (if (forceRefresh) call.fetchPolicy(FetchPolicy.NetworkOnly) else call).execute()
             val exception = response.exception
             val data = response.data
             return when {
@@ -31,7 +36,19 @@ class DefaultGqlApiLayer
                             response.errors?.joinToString { it.message } ?: "No data received",
                         ),
                     )
-                else -> RequestResult.Success(transform(data))
+                else ->
+                    try {
+                        RequestResult.Success(transform(data))
+                    } catch (e: CancellationException) {
+                        // Never swallow coroutine cancellation.
+                        throw e
+                    } catch (
+                        // The contract is that a throwing transform becomes an Error,
+                        // whatever the mapper throws.
+                        @Suppress("TooGenericExceptionCaught") e: Exception,
+                    ) {
+                        RequestResult.Error(e)
+                    }
             }
         }
     }

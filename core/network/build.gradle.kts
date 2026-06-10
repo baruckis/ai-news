@@ -48,6 +48,30 @@ kotlin {
     }
 }
 
+kover {
+    // The aggregated root report applies the same filters, but per-module reports do NOT
+    // inherit them and Codecov consumes this module's own XML — so the excludes are
+    // repeated here, mirroring how :bff excludes its composition root locally.
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "com.baruckis.ainews.core.network.BuildConfig",
+                    // Apollo codegen output (queries, fragments, adapters) — generated code.
+                    "com.baruckis.ainews.core.network.graphql.*",
+                    // DI wiring (Android Context + SQLite cache) and its Dagger-generated
+                    // Module_Provide*Factory companions; no testable logic.
+                    "com.baruckis.ainews.core.network.di.*",
+                    "*_Factory",
+                    "hilt_aggregated_deps.*",
+                    "dagger.hilt.*",
+                    "*Hilt_*",
+                )
+            }
+        }
+    }
+}
+
 apollo {
     service("news") {
         packageName.set("com.baruckis.ainews.core.network.graphql")

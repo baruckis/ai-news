@@ -14,12 +14,16 @@ interface GqlApiLayer {
      * Executes [query] and converts its data with [transform].
      *
      * @param query the generated GraphQL operation to execute
-     * @param transform maps the raw operation data into the caller's model
+     * @param forceRefresh when true, bypasses the normalized cache and fetches from the
+     *   network (e.g. pull-to-refresh); default reads honor the client's cache-first policy
+     * @param transform maps the raw operation data into the caller's model; if it throws,
+     *   the failure is returned as [RequestResult.Error] rather than escaping
      * @return [RequestResult.Success] with the transformed data, or [RequestResult.Error]
-     *   on transport failures, GraphQL errors or missing data
+     *   on transport failures, GraphQL errors, missing data or a throwing [transform]
      */
     suspend fun <D : Query.Data, R> query(
         query: Query<D>,
+        forceRefresh: Boolean = false,
         transform: (D) -> R,
     ): RequestResult<R>
 }

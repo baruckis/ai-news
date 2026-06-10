@@ -2,6 +2,10 @@ package com.baruckis.ainews.core.network
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.cache.normalized.FetchPolicy
+import com.apollographql.cache.normalized.fetchPolicy
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
+import com.apollographql.cache.normalized.normalizedCache
 import com.apollographql.mockserver.MockServer
 import com.apollographql.mockserver.enqueueError
 import com.apollographql.mockserver.enqueueString
@@ -104,6 +108,62 @@ class DefaultGqlApiLayerTest {
             assertTrue((result as RequestResult.Error).cause is ApolloException)
         }
 
+    @Test
+    fun `throwing transform maps to Error instead of escaping`() =
+        withApiLayer { server, api ->
+            server.enqueueString(AI_NEWS_RESPONSE)
+
+            val result = api.query(GetAiNewsQuery(cursor = null)) { error("mapper exploded") }
+
+            assertTrue(result is RequestResult.Error)
+            val cause = (result as RequestResult.Error).cause
+            assertTrue(cause is IllegalStateException)
+            assertEquals("mapper exploded", cause.message)
+        }
+
+    @Test
+    fun `forceRefresh bypasses the cache and fetches from the network`() =
+        runTest {
+            val server = MockServer()
+            val client =
+                ApolloClient
+                    .Builder()
+                    .serverUrl(server.url())
+                    .normalizedCache(
+                        normalizedCacheFactory = MemoryCacheFactory(),
+                        typePolicies = emptyMap(),
+                        fieldPolicies = emptyMap(),
+                    ).fetchPolicy(FetchPolicy.CacheFirst)
+                    .build()
+            val api = DefaultGqlApiLayer(client)
+            val firstTitle: (GetAiNewsQuery.Data) -> String =
+                {
+                    it.aiNews.articles
+                        .first()
+                        .articleListItem.title
+                }
+            try {
+                // First call populates the cache from the network.
+                server.enqueueString(AI_NEWS_RESPONSE)
+                val initial = api.query(GetAiNewsQuery(cursor = null), transform = firstTitle)
+                assertEquals("AI breakthrough announced", (initial as RequestResult.Success).data)
+
+                server.enqueueString(REFRESHED_RESPONSE)
+
+                // Cache-first default: answered from the cache, the queued response is untouched.
+                val cached = api.query(GetAiNewsQuery(cursor = null), transform = firstTitle)
+                assertEquals("AI breakthrough announced", (cached as RequestResult.Success).data)
+
+                // forceRefresh goes back to the network and sees the refreshed payload.
+                val refreshed =
+                    api.query(GetAiNewsQuery(cursor = null), forceRefresh = true, transform = firstTitle)
+                assertEquals("Fresh news after refresh", (refreshed as RequestResult.Success).data)
+            } finally {
+                client.close()
+                server.close()
+            }
+        }
+
     private companion object {
         val AI_NEWS_RESPONSE =
             """
@@ -131,6 +191,28 @@ class DefaultGqlApiLayerTest {
                     }
                   ],
                   "nextPage": "next-cursor"
+                }
+              }
+            }
+            """.trimIndent()
+
+        val REFRESHED_RESPONSE =
+            """
+            {
+              "data": {
+                "aiNews": {
+                  "articles": [
+                    {
+                      "__typename": "Article",
+                      "id": "article-1",
+                      "title": "Fresh news after refresh",
+                      "description": null,
+                      "imageUrl": null,
+                      "sourceName": "TechCrunch",
+                      "publishedAt": "2026-06-03T10:00:00Z"
+                    }
+                  ],
+                  "nextPage": null
                 }
               }
             }

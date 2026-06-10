@@ -77,8 +77,9 @@ kover {
                     "*.designsystem.components.PreviewSupportKt",
                     // Apollo codegen output (queries, fragments, adapters) — generated code.
                     "com.baruckis.ainews.core.network.graphql.*",
-                    // DI wiring only (Android Context + SQLite cache); no testable logic.
-                    "com.baruckis.ainews.core.network.di.ApolloModule",
+                    // DI wiring (Android Context + SQLite cache) and its Dagger-generated
+                    // Module_Provide*Factory companions; no testable logic.
+                    "com.baruckis.ainews.core.network.di.*",
                 )
                 annotatedBy("dagger.hilt.android.HiltAndroidApp")
             }
