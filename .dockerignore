@@ -1,0 +1,19 @@
+# Keeps the Docker build context (repo root) lean — see bff/Dockerfile.
+.git
+.github
+.gradle
+.kotlin
+.idea
+**/build
+*.log
+*.iml
+.DS_Store
+
+# Never bake secrets or machine-local config into an image layer.
+local.properties
+.env
+.env.*
+
+# Personal notes and deployment runtime files — not needed to build the jar.
+_planning
+deploy
