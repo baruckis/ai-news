@@ -84,6 +84,8 @@ kover {
                     // DI wiring (Android Context + SQLite cache) and its Dagger-generated
                     // Module_Provide*Factory companions; no testable logic.
                     "com.baruckis.ainews.core.network.di.*",
+                    // DI wiring for the news feature (@Binds module); no testable logic.
+                    "com.baruckis.ainews.feature.news.di.*",
                 )
                 annotatedBy("dagger.hilt.android.HiltAndroidApp")
             }

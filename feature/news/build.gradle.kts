@@ -21,11 +21,41 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testOptions {
+        unitTests.all { test ->
+            test.useJUnitPlatform()
+        }
+    }
 }
 
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+kover {
+    // The aggregated root report applies the same filters, but per-module reports do NOT
+    // inherit them and Codecov consumes this module's own XML — so the excludes are
+    // repeated here, mirroring :core:network.
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // DI wiring (@Binds module) and its Dagger-generated companions;
+                    // no testable logic.
+                    "com.baruckis.ainews.feature.news.di.*",
+                    "*_Factory",
+                    "*_Factory\$*",
+                    "*_HiltModules*",
+                    "*_MembersInjector",
+                    "hilt_aggregated_deps.*",
+                    "dagger.hilt.*",
+                    "*Hilt_*",
+                )
+            }
+        }
     }
 }
 
@@ -42,4 +72,14 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    // Repository tests run the generated operations against a real HTTP mock server,
+    // so the Apollo runtime is needed on the test classpath (it is `implementation`
+    // inside :core:network and therefore not visible here at compile time).
+    testImplementation(libs.apollo.runtime)
+    testImplementation(libs.apollo.mockserver)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
