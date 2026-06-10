@@ -55,3 +55,6 @@ captures/
 # Local planning notes and agent guide — personal, never push to remote
 _planning/
 CLAUDE.md
+
+# User documentation folder — personal, never push to remote
+_docs/
