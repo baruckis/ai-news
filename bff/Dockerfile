@@ -6,7 +6,8 @@
 # deploy/docker-compose.yml already invokes it this way.
 
 # --- Build stage: compile the fat jar from source ----------------------------
-FROM gradle:jdk21 AS build
+# Pinned to the same Gradle version as the repo's wrapper.
+FROM gradle:9.5.1-jdk21 AS build
 # The gradle image runs as the non-root `gradle` user, so chown the sources to
 # let Gradle write build outputs into the tree.
 WORKDIR /home/gradle/src
@@ -15,7 +16,7 @@ COPY --chown=gradle:gradle . .
 RUN ./gradlew :bff:buildFatJar --no-daemon
 
 # --- Runtime stage: minimal JRE, non-root ------------------------------------
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21.0.11_10-jre
 RUN useradd --system --no-create-home bff
 USER bff
 WORKDIR /app

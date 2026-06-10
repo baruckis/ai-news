@@ -17,19 +17,39 @@ services:
       - NEWS_TIMEFRAME=${NEWS_TIMEFRAME-168h}
     expose:
       - "8080" # internal only — Caddy is the sole public entry point
+    healthcheck:
+      # /graphql only accepts POST (GET returns 405), so probe with a minimal
+      # query. wget ships with the eclipse-temurin runtime image.
+      test:
+        [
+          "CMD",
+          "wget",
+          "-q",
+          "-O",
+          "/dev/null",
+          "--header=Content-Type: application/json",
+          "--post-data={\"query\":\"{ __typename }\"}",
+          "http://127.0.0.1:8080/graphql",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     restart: unless-stopped
 
   caddy:
-    image: caddy:2
+    image: caddy:2.11.4
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp" # HTTP/3 (QUIC)
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data # TLS certificates — must persist across restarts
       - caddy_config:/config
     depends_on:
-      - bff
+      bff:
+        condition: service_healthy # wait until the BFF answers GraphQL queries
     restart: unless-stopped
 
 volumes:
