@@ -81,6 +81,15 @@ class ArticleDetailScreenTest {
     }
 
     @Test
+    fun contentState_withBlankContent_fallsBackToDescription() {
+        setScreen(ArticleDetailState(article = article.copy(content = "   "), isLoading = false))
+
+        composeRule.onNodeWithText("Short description").assertIsDisplayed()
+        // The full text stays one tap away even when the feed withheld it.
+        composeRule.onNodeWithText("Read at source").assertIsDisplayed()
+    }
+
+    @Test
     fun loadingState_rendersPlaceholder() {
         // The skeleton shimmer animates forever; freeze the clock so the rule can settle.
         composeRule.mainClock.autoAdvance = false
