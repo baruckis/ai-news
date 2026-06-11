@@ -14,6 +14,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /**
  * Interaction and state-rendering tests for [NewsListScreen] on Robolectric: each of the
@@ -24,6 +27,16 @@ class NewsListScreenTest {
     @get:Rule
     val composeRule = createComposeRule()
 
+    private val publishedAt = Instant.parse("2026-06-01T10:00:00Z")
+
+    // Formats with the same en-US locale pinned via robolectric.properties (qualifiers),
+    // so the expectation matches NewsCard's Locale.getDefault() formatting on any host.
+    private val expectedDate =
+        DateTimeFormatter
+            .ofPattern("MMM d, yyyy", Locale.US)
+            .withZone(ZoneId.systemDefault())
+            .format(publishedAt)
+
     private val articles =
         listOf(
             ArticleSummary(
@@ -32,7 +45,7 @@ class NewsListScreenTest {
                 description = "First description",
                 imageUrl = null,
                 sourceName = "TechWire",
-                publishedAt = Instant.parse("2026-06-01T10:00:00Z"),
+                publishedAt = publishedAt,
             ),
             ArticleSummary(
                 id = "2",
@@ -62,7 +75,7 @@ class NewsListScreenTest {
         composeRule.onNodeWithText("First headline").assertIsDisplayed()
         composeRule.onNodeWithText("First description").assertIsDisplayed()
         composeRule.onNodeWithText("Second headline").assertIsDisplayed()
-        composeRule.onNodeWithText("TechWire · Jun 1, 2026").assertIsDisplayed()
+        composeRule.onNodeWithText("TechWire · $expectedDate").assertIsDisplayed()
     }
 
     @Test
