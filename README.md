@@ -4,10 +4,17 @@
 [![codecov](https://codecov.io/gh/baruckis/ai-news/branch/main/graph/badge.svg)](https://codecov.io/gh/baruckis/ai-news)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> 🚧 **Work in progress.** An open-source Android app that shows real AI news: list → tap → detail.
+An open-source Android app that shows real AI news: list → tap → detail. A small, deliberately
+polished demo of a modern Android engineering stack — built in public, stage by stage, each
+stage reviewed before merge.
 
-A small, deliberately polished demo of a modern Android engineering stack — built in public,
-stage by stage, each stage reviewed before merge.
+## Screenshots
+
+| News list | Article detail | Tablet (two-pane) |
+| --- | --- | --- |
+| ![News list on a phone](docs/screenshots/phone-list.png) | ![Article detail on a phone](docs/screenshots/phone-detail.png) | ![Two-pane layout on a tablet](docs/screenshots/tablet.png) |
+
+![Tapping an article in the list opens its detail](docs/demo.gif)
 
 ## Tech stack
 
@@ -21,7 +28,46 @@ stage by stage, each stage reviewed before merge.
 - Tests: JUnit5, MockK, Turbine, Robolectric + Roborazzi, apollo-mockserver
 - CI: GitHub Actions with quality (detekt, ktlint, Android Lint) and coverage (Kover) gates
 
-## Module structure
+## Architecture
+
+The app talks GraphQL to its own small Kotlin backend (the BFF), which keeps the news
+provider's API key secret and normalises provider quirks behind one stable schema.
+Modules depend in one direction only — see [ARCHITECTURE.md](ARCHITECTURE.md) for the
+full rationale (MVI, Clean Architecture layering, Navigation 3, the BFF's role).
+
+```mermaid
+flowchart LR
+    subgraph android["Android app"]
+        app[":app<br/>MainActivity, Navigation 3 host"]
+        news[":feature:news<br/>data / domain / ui"]
+        network[":core:network<br/>Apollo client, GqlApiLayer"]
+        designsystem[":core:designsystem<br/>theme, tokens, components"]
+        mvi[":core:mvi<br/>MVI base classes"]
+        model[":core:model<br/>pure domain models"]
+        app --> news
+        app --> designsystem
+        app --> model
+        app --> mvi
+        news --> network
+        news --> designsystem
+        news --> mvi
+        news --> model
+        network --> model
+    end
+
+    bff[":bff<br/>Ktor + graphql-kotlin"]
+    provider[("NewsData.io<br/>(GNews fallback)")]
+
+    network -- "GraphQL over HTTPS" --> bff
+    bff -- "REST + secret API key" --> provider
+```
+
+Data flow for the core journey: the **list** screen sends a `Load` intent → use case →
+repository → Apollo → **BFF** → **NewsData.io**; tapping an article emits a
+`NavigateToDetail` effect, and the **detail** screen loads from the Apollo normalized
+cache (or the BFF on a miss).
+
+### Modules
 
 ```
 :app                  Application, MainActivity, DI wiring (entry points only)
@@ -164,9 +210,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 8** — Article detail + Navigation 3
 - [x] **Stage 9** — Polish, adaptive layout, accessibility
 - [x] **Stage 10** — Performance: Compose stability, baseline profiles and macrobenchmarks
-
-This README will grow with architecture diagrams, screenshots and setup instructions as the
-stages land.
+- [x] **Stage 11** — Documentation (architecture docs, diagrams, screenshots) and final QA
 
 ## Contributing
 
