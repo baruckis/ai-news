@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Title shown in the news list top bar. -->
+    <string name="news_list_title">AI News</string>
+    <!-- Error message when the backend cannot be reached. -->
+    <string name="news_list_error_network">No connection. Check your network and try again.</string>
+    <!-- Error message for any other loading failure. -->
+    <string name="news_list_error_unknown">Something went wrong while loading the news.</string>
+    <!-- Title of the empty state when the feed has no articles. -->
+    <string name="news_list_empty_title">No news yet</string>
+    <!-- Explanatory message of the empty state. -->
+    <string name="news_list_empty_message">Check back later for fresh AI stories.</string>
+</resources>
