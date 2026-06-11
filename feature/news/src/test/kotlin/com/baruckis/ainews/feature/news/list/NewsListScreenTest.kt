@@ -111,6 +111,13 @@ class NewsListScreenTest {
     }
 
     @Test
+    fun refreshingWithNoArticles_doesNotShowEmptyView() {
+        setScreen(NewsListState(isLoading = false, isRefreshing = true))
+
+        composeRule.onNodeWithText("No news yet").assertDoesNotExist()
+    }
+
+    @Test
     fun articleClick_emitsArticleClickedIntent() {
         val intents = mutableListOf<NewsListIntent>()
         setScreen(NewsListState(articles = articles, isLoading = false), onIntent = intents::add)

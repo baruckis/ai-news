@@ -18,6 +18,10 @@ data class NewsListState(
     /** Failure of the last load, or null when the last load succeeded (or is running). */
     val error: NewsError? = null,
 ) : UiState {
-    /** True when a load finished cleanly but returned no articles; drives the empty view. */
-    val isEmpty: Boolean get() = !isLoading && error == null && articles.isEmpty()
+    /**
+     * True when a load finished cleanly but returned no articles; drives the empty view.
+     * Also false while refreshing, so the empty view and the refresh indicator never
+     * compete on screen.
+     */
+    val isEmpty: Boolean get() = !isLoading && !isRefreshing && error == null && articles.isEmpty()
 }

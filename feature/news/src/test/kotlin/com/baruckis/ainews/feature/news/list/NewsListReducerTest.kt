@@ -72,6 +72,7 @@ class NewsListReducerTest {
         assertTrue(NewsListState(isLoading = false).isEmpty)
 
         assertFalse(NewsListState(isLoading = true).isEmpty)
+        assertFalse(NewsListState(isLoading = false, isRefreshing = true).isEmpty)
         assertFalse(NewsListState(isLoading = false, error = NewsError.Unknown).isEmpty)
         assertFalse(NewsListState(articles = listOf(article), isLoading = false).isEmpty)
     }

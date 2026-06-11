@@ -8,6 +8,7 @@ import com.baruckis.ainews.core.network.RequestResult
 import com.baruckis.ainews.feature.news.domain.model.NewsError
 import com.baruckis.ainews.feature.news.domain.repository.NewsRepository
 import com.baruckis.ainews.feature.news.domain.usecase.GetAiNewsUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,11 +50,20 @@ class NewsListViewModelTest {
         var feedResult: RequestResult<List<ArticleSummary>> = RequestResult.Success(emptyList())
         var gate: CompletableDeferred<Unit>? = null
         val forceRefreshCalls = mutableListOf<Boolean>()
+        var cancelledCalls = 0
 
         override suspend fun getAiNews(forceRefresh: Boolean): RequestResult<List<ArticleSummary>> {
             forceRefreshCalls += forceRefresh
-            gate?.await()
-            return feedResult
+            // Snapshot on entry: a cancelled in-flight call must answer with the value it
+            // started with, never with one configured for a later call.
+            val result = feedResult
+            try {
+                gate?.await()
+            } catch (cancellation: CancellationException) {
+                cancelledCalls++
+                throw cancellation
+            }
+            return result
         }
 
         override suspend fun getArticle(id: String): RequestResult<Article> = error("Not used by the list screen")
@@ -148,6 +158,7 @@ class NewsListViewModelTest {
             viewModel.state.test {
                 assertEquals(listOf(article), awaitItem().articles)
 
+                repository.feedResult = RequestResult.Success(listOf(updated))
                 repository.gate = CompletableDeferred()
                 viewModel.onIntent(NewsListIntent.Refresh)
 
@@ -156,13 +167,39 @@ class NewsListViewModelTest {
                 assertFalse(refreshing.isLoading)
                 assertEquals(listOf(article), refreshing.articles)
 
-                repository.feedResult = RequestResult.Success(listOf(updated))
                 repository.gate?.complete(Unit)
 
                 val refreshed = awaitItem()
                 assertFalse(refreshed.isRefreshing)
                 assertEquals(listOf(updated), refreshed.articles)
             }
+            assertEquals(listOf(false, true), repository.forceRefreshCalls)
+        }
+
+    @Test
+    fun `Refresh during an in-flight load cancels it and only the refresh result lands`() =
+        runTest(testDispatcher) {
+            val stale = article.copy(id = "stale", title = "Stale headline")
+            repository.feedResult = RequestResult.Success(listOf(stale))
+            repository.gate = CompletableDeferred()
+
+            val viewModel = viewModel() // the init-triggered Load suspends on the gate
+            val initialLoadGate = repository.gate ?: error("gate was set above")
+
+            val fresh = article.copy(id = "fresh", title = "Fresh headline")
+            repository.feedResult = RequestResult.Success(listOf(fresh))
+            repository.gate = CompletableDeferred()
+            viewModel.onIntent(NewsListIntent.Refresh)
+
+            // Single-flight: starting the refresh cancelled the in-flight initial load.
+            assertEquals(1, repository.cancelledCalls)
+
+            repository.gate?.complete(Unit)
+            assertEquals(listOf(fresh), viewModel.state.value.articles)
+
+            // Releasing the cancelled load's gate must not resurrect its stale result.
+            initialLoadGate.complete(Unit)
+            assertEquals(listOf(fresh), viewModel.state.value.articles)
             assertEquals(listOf(false, true), repository.forceRefreshCalls)
         }
 

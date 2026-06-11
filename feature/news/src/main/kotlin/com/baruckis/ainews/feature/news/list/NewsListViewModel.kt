@@ -7,6 +7,7 @@ import com.baruckis.ainews.feature.news.data.toNewsError
 import com.baruckis.ainews.feature.news.domain.model.NewsError
 import com.baruckis.ainews.feature.news.domain.usecase.GetAiNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +22,8 @@ class NewsListViewModel
     constructor(
         private val getAiNews: GetAiNewsUseCase,
     ) : MviViewModel<NewsListState, NewsListIntent, NewsListEffect>(NewsListState()) {
+        private var loadJob: Job? = null
+
         init {
             onIntent(NewsListIntent.Load)
         }
@@ -35,22 +38,26 @@ class NewsListViewModel
         }
 
         private fun load(forceRefresh: Boolean) {
-            viewModelScope.launch {
-                setState {
-                    if (forceRefresh) NewsListReducer.refreshing(this) else NewsListReducer.loading(this)
-                }
-                when (val result = getAiNews(forceRefresh)) {
-                    is RequestResult.Success -> setState { NewsListReducer.success(this, result.data) }
-                    is RequestResult.Error -> {
-                        val error = result.toNewsError()
-                        setState { NewsListReducer.failure(this, error) }
-                        // Connectivity problems are also surfaced as a snackbar so the user
-                        // is informed even when stale articles remain visible on screen.
-                        if (error == NewsError.Network) {
-                            sendEffect(NewsListEffect.ShowOfflineSnackbar)
+            // Single-flight: a Refresh (or Retry) arriving while a load is in flight cancels
+            // it, so a slow stale response can never overwrite the newer request's result.
+            loadJob?.cancel()
+            loadJob =
+                viewModelScope.launch {
+                    setState {
+                        if (forceRefresh) NewsListReducer.refreshing(this) else NewsListReducer.loading(this)
+                    }
+                    when (val result = getAiNews(forceRefresh)) {
+                        is RequestResult.Success -> setState { NewsListReducer.success(this, result.data) }
+                        is RequestResult.Error -> {
+                            val error = result.toNewsError()
+                            setState { NewsListReducer.failure(this, error) }
+                            // Connectivity problems are also surfaced as a snackbar so the user
+                            // is informed even when stale articles remain visible on screen.
+                            if (error == NewsError.Network) {
+                                sendEffect(NewsListEffect.ShowOfflineSnackbar)
+                            }
                         }
                     }
                 }
-            }
         }
     }

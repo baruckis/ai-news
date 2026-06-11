@@ -68,10 +68,12 @@ fun NewsListScreen(
 
 @Composable
 private fun LoadingSkeletons() {
+    // Scrollable so the pull-to-refresh gesture also works while skeletons are shown.
     Column(
         modifier =
             Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(AppTheme.grid.m)
                 .testTag(NEWS_LIST_LOADING_TAG),
         verticalArrangement = Arrangement.spacedBy(AppTheme.grid.m),
