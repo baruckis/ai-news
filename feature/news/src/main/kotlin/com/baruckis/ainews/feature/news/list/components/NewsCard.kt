@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.baruckis.ainews.core.designsystem.components.AppText
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.core.designsystem.theme.HairlineBorderWidth
@@ -91,12 +90,12 @@ private fun ArticleImage(imageUrl: String?) {
     AsyncImage(
         // The fillMaxWidth + aspectRatio constraints below give the request an exact
         // target size, so Coil decodes a downsampled bitmap instead of the original.
+        // Crossfade comes from the app-wide ImageLoader default (AiNewsApplication).
         model =
             remember(context, imageUrl) {
                 ImageRequest
                     .Builder(context)
                     .data(imageUrl)
-                    .crossfade(true)
                     .build()
             },
         // Decorative (placeholder included): the headline next to it carries the
