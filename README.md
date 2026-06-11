@@ -110,7 +110,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 5** — `:core:mvi` + `:core:model`
 - [x] **Stage 6** — `:feature:news` data + domain
 - [x] **Stage 7** — News list screen
-- [ ] **Stage 8** — Article detail + Navigation 3
+- [x] **Stage 8** — Article detail + Navigation 3
 - [ ] **Stage 9** — Polish, adaptive layout, accessibility
 
 This README will grow with architecture diagrams, screenshots and setup instructions as the

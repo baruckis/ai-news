@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Minimal platform theme for the Stage 0 placeholder. The Compose design-system
-         theme arrives in Stage 1. -->
+    <!-- Minimal platform theme; all real theming happens in Compose (AppTheme). -->
     <style name="Theme.AiNews" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Splash theme (Core SplashScreen API): brand-accent background with the launcher
+         glyph, handing over to Theme.AiNews once the first frame is ready. -->
+    <style name="Theme.AiNews.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_accent</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.AiNews</item>
+    </style>
 </resources>

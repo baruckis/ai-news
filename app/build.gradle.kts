@@ -58,6 +58,12 @@ android {
             // Robolectric needs the merged resources/manifest to inflate Compose content
             // in the navigation integration tests.
             isIncludeAndroidResources = true
+            all { test ->
+                // Default runs VERIFY each screenshot against its committed reference and
+                // fail on any difference. Pass -Precord to (re)generate the references.
+                val roborazziMode = if (project.hasProperty("record")) "record" else "verify"
+                test.systemProperty("roborazzi.test.$roborazziMode", "true")
+            }
         }
     }
 }
@@ -75,12 +81,16 @@ dependencies {
     implementation(project(":core:mvi"))
 
     implementation(libs.androidx.core.ktx)
+    // Compat splash screen shown while the first frame is being drawn.
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
+    // WindowSizeClass via currentWindowAdaptiveInfo() drives the two-pane scene strategy.
+    implementation(libs.compose.material3.adaptive)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
 
@@ -106,4 +116,7 @@ dependencies {
     testImplementation(libs.compose.ui.test.junit4)
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
+    // Tablet-width screenshot tests of the adaptive two-pane layout.
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
 }

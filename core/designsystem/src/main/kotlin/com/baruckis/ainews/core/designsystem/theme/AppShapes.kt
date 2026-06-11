@@ -21,6 +21,9 @@ data class AppShapes(
 /** Stroke width for hairline borders and dividers (1dp, independent of the spacing scale). */
 val HairlineBorderWidth: Dp = 1.dp
 
+/** Minimum touch-target size for interactive components (WCAG / Material accessibility). */
+val MinTouchTargetSize: Dp = 48.dp
+
 /** Shared default shape set; a single stable instance avoids per-recomposition allocation. */
 val DefaultShapes = AppShapes()
 
