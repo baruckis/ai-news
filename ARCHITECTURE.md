@@ -16,6 +16,9 @@ flowchart LR
         mvi[":core:mvi<br/>MVI base classes"]
         model[":core:model<br/>pure domain models"]
         app --> news
+        app --> designsystem
+        app --> model
+        app --> mvi
         news --> network
         news --> designsystem
         news --> mvi
