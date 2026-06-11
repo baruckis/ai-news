@@ -9,3 +9,10 @@ GRAPHQL_URL=https://ainews-api.baruckis.com/graphql
 # To use a locally running BFF from the Android emulator instead
 # (10.0.2.2 is the host machine's localhost as seen from the emulator):
 # GRAPHQL_URL=http://10.0.2.2:8080/graphql
+
+# Optional — sign release builds locally (see deploy/RELEASE.md). Without these the
+# release build still assembles, just unsigned. Keep the keystore outside the repo.
+# SIGNING_KEYSTORE_PATH=/absolute/path/to/ainews-release.jks
+# SIGNING_KEY_ALIAS=ainews
+# SIGNING_STORE_PASSWORD=
+# SIGNING_KEY_PASSWORD=

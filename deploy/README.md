@@ -11,6 +11,10 @@ self-contained recipe anyone can use to host their own.
 
 Throughout this guide, replace `news-api.example.com` with your own (sub)domain.
 
+App distribution lives in this directory too: [RELEASE.md](RELEASE.md) covers release
+signing and publishing the APK to GitHub Releases; [DEMO.md](DEMO.md) covers the
+Appetize.io browser demo.
+
 ## Prerequisites
 
 - A server reachable over SSH, with ports 80 and 443 open to the internet.
