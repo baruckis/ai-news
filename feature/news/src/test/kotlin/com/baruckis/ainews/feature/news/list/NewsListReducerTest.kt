@@ -2,6 +2,7 @@ package com.baruckis.ainews.feature.news.list
 
 import com.baruckis.ainews.core.model.ArticleSummary
 import com.baruckis.ainews.feature.news.domain.model.NewsError
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -33,7 +34,7 @@ class NewsListReducerTest {
 
     @Test
     fun `refreshing sets isRefreshing but keeps existing articles visible`() {
-        val previous = NewsListState(articles = listOf(article), isLoading = false)
+        val previous = NewsListState(articles = persistentListOf(article), isLoading = false)
 
         val state = NewsListReducer.refreshing(previous)
 
@@ -57,7 +58,7 @@ class NewsListReducerTest {
 
     @Test
     fun `failure records the error and keeps already-loaded articles`() {
-        val previous = NewsListState(articles = listOf(article), isLoading = true, isRefreshing = true)
+        val previous = NewsListState(articles = persistentListOf(article), isLoading = true, isRefreshing = true)
 
         val state = NewsListReducer.failure(previous, NewsError.Network)
 
@@ -74,6 +75,6 @@ class NewsListReducerTest {
         assertFalse(NewsListState(isLoading = true).isEmpty)
         assertFalse(NewsListState(isLoading = false, isRefreshing = true).isEmpty)
         assertFalse(NewsListState(isLoading = false, error = NewsError.Unknown).isEmpty)
-        assertFalse(NewsListState(articles = listOf(article), isLoading = false).isEmpty)
+        assertFalse(NewsListState(articles = persistentListOf(article), isLoading = false).isEmpty)
     }
 }

@@ -1,5 +1,6 @@
 package com.baruckis.ainews.feature.news.detail
 
+import androidx.compose.runtime.Immutable
 import com.baruckis.ainews.core.model.Article
 import com.baruckis.ainews.core.mvi.UiState
 import com.baruckis.ainews.feature.news.domain.model.NewsError
@@ -7,7 +8,11 @@ import com.baruckis.ainews.feature.news.domain.model.NewsError
 /**
  * Single source of truth for the article detail screen. Starts in the loading state so
  * the first frame shows a placeholder instead of flashing empty content.
+ *
+ * [Immutable] lets the Compose compiler treat the whole state as stable, so composables
+ * taking it as a parameter can skip recomposition when the state instance has not changed.
  */
+@Immutable
 data class ArticleDetailState(
     /** Id requested by the last [ArticleDetailIntent.Load]; lets the UI retry the same article. */
     val articleId: String? = null,

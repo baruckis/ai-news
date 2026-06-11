@@ -1,0 +1,31 @@
+stable class com.baruckis.ainews.core.designsystem.theme.AppColors {
+  stable val surfacePrimary: Color
+  stable val surfaceSecondary: Color
+  stable val textPrimary: Color
+  stable val textSecondary: Color
+  stable val accent: Color
+  stable val onAccent: Color
+  stable val border: Color
+  stable val error: Color
+}
+stable class com.baruckis.ainews.core.designsystem.theme.AppShapes {
+  stable val card: Shape
+  stable val button: Shape
+}
+stable class com.baruckis.ainews.core.designsystem.theme.AppTheme {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.core.designsystem.theme.AppTypography {
+  stable val titleLarge: TextStyle
+  stable val titleMedium: TextStyle
+  stable val body: TextStyle
+  stable val caption: TextStyle
+  stable val label: TextStyle
+}
+stable class com.baruckis.ainews.core.designsystem.theme.Grid {
+  stable val xs: Dp
+  stable val s: Dp
+  stable val m: Dp
+  stable val l: Dp
+  stable val xl: Dp
+}

@@ -1,0 +1,70 @@
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppButton(
+  stable text: String
+  stable onClick: Function0<Unit>
+  stable modifier: Modifier? = @static <expression>
+  stable enabled: Boolean = @static true
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppButtonLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppButtonDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppText(
+  stable text: String
+  stable modifier: Modifier? = @static <expression>
+  stable style: TextStyle? = @dynamic <expression>
+  stable color: Color = @dynamic <expression>
+  stable maxLines: Int = @static 2147483647
+  stable overflow: TextOverflow = @static <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppTextLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppTextDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable, [androidx.compose.ui.UiComposable]]") fun com.baruckis.ainews.core.designsystem.components.AppTopBar(
+  stable title: String
+  stable modifier: Modifier? = @static <expression>
+  stable navigationIcon: Function2<Composer, Int, Unit>? = @static <expression>
+)
+fun com.baruckis.ainews.core.designsystem.components.appTopBarColors()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppTopBarLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.AppTopBarDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.EmptyView(
+  stable title: String
+  stable message: String
+  stable modifier: Modifier? = @static <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.EmptyViewLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.EmptyViewDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.ErrorView(
+  stable message: String
+  stable onRetry: Function0<Unit>
+  stable modifier: Modifier? = @static <expression>
+  stable retryText: String? = @dynamic <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.ErrorViewLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.ErrorViewDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.NewsCardSkeleton(
+  stable modifier: Modifier? = @static <expression>
+)
+fun com.baruckis.ainews.core.designsystem.components.rememberShimmerBrush()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.ShimmerBlock(
+  stable brush: Brush
+  stable modifier: Modifier? = @static <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.NewsCardSkeletonLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.core.designsystem.components.NewsCardSkeletonDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable, [androidx.compose.ui.UiComposable]]") fun com.baruckis.ainews.core.designsystem.components.ThemedPreviewSurface(
+  stable content: Function2<Composer, Int, Unit>
+)
+readonly fun com.baruckis.ainews.core.designsystem.theme.AppTheme.<get-colors>(
+  unused stable <this>: AppTheme
+): AppColors
+readonly fun com.baruckis.ainews.core.designsystem.theme.AppTheme.<get-typography>(
+  unused stable <this>: AppTheme
+): AppTypography
+readonly fun com.baruckis.ainews.core.designsystem.theme.AppTheme.<get-grid>(
+  unused stable <this>: AppTheme
+): Grid
+readonly fun com.baruckis.ainews.core.designsystem.theme.AppTheme.<get-shapes>(
+  unused stable <this>: AppTheme
+): AppShapes
+restartable skippable scheme("[0, [0]]") fun com.baruckis.ainews.core.designsystem.theme.AppTheme(
+  stable darkTheme: Boolean = @dynamic <expression>
+  stable content: Function2<Composer, Int, Unit>
+)

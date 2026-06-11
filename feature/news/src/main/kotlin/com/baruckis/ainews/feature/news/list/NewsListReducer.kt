@@ -2,6 +2,7 @@ package com.baruckis.ainews.feature.news.list
 
 import com.baruckis.ainews.core.model.ArticleSummary
 import com.baruckis.ainews.feature.news.domain.model.NewsError
+import kotlinx.collections.immutable.toImmutableList
 
 /**
  * Pure state transitions for the news list screen. No dependencies, no side effects —
@@ -17,7 +18,11 @@ object NewsListReducer {
      */
     fun refreshing(state: NewsListState): NewsListState = state.copy(isRefreshing = true, error = null)
 
-    /** A load finished with [articles]: replace the content and clear progress flags. */
+    /**
+     * A load finished with [articles]: replace the content and clear progress flags.
+     * The list is copied into an immutable container here, at the domain→UI boundary,
+     * so the UI state stays stable for Compose.
+     */
     fun success(
         state: NewsListState,
         articles: List<ArticleSummary>,
@@ -25,7 +30,7 @@ object NewsListReducer {
         state.copy(
             isLoading = false,
             isRefreshing = false,
-            articles = articles,
+            articles = articles.toImmutableList(),
             error = null,
         )
 

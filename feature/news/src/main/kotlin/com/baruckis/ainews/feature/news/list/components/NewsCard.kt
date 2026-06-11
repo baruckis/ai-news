@@ -14,6 +14,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.baruckis.ainews.core.designsystem.components.AppText
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.core.designsystem.theme.HairlineBorderWidth
@@ -46,24 +49,7 @@ fun NewsCard(
         border = BorderStroke(HairlineBorderWidth, AppTheme.colors.border),
     ) {
         Column {
-            // Always rendered: a missing or failed image falls back to the branded
-            // placeholder instead of collapsing the slot.
-            val placeholder = painterResource(DesignSystemR.drawable.img_article_placeholder)
-            AsyncImage(
-                model = article.imageUrl,
-                // Decorative (placeholder included): the headline below carries the
-                // article's meaning.
-                contentDescription = null,
-                placeholder = placeholder,
-                error = placeholder,
-                fallback = placeholder,
-                contentScale = ContentScale.Crop,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(IMAGE_ASPECT_RATIO)
-                        .background(AppTheme.colors.surfaceSecondary),
-            )
+            ArticleImage(imageUrl = article.imageUrl)
             Column(modifier = Modifier.padding(AppTheme.grid.m)) {
                 AppText(
                     text = article.title,
@@ -92,6 +78,40 @@ fun NewsCard(
             }
         }
     }
+}
+
+/**
+ * Lead image slot. Always rendered: a missing or failed image falls back to the branded
+ * placeholder instead of collapsing the slot.
+ */
+@Composable
+private fun ArticleImage(imageUrl: String?) {
+    val placeholder = painterResource(DesignSystemR.drawable.img_article_placeholder)
+    val context = LocalPlatformContext.current
+    AsyncImage(
+        // The fillMaxWidth + aspectRatio constraints below give the request an exact
+        // target size, so Coil decodes a downsampled bitmap instead of the original.
+        model =
+            remember(context, imageUrl) {
+                ImageRequest
+                    .Builder(context)
+                    .data(imageUrl)
+                    .crossfade(true)
+                    .build()
+            },
+        // Decorative (placeholder included): the headline next to it carries the
+        // article's meaning.
+        contentDescription = null,
+        placeholder = placeholder,
+        error = placeholder,
+        fallback = placeholder,
+        contentScale = ContentScale.Crop,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(IMAGE_ASPECT_RATIO)
+                .background(AppTheme.colors.surfaceSecondary),
+    )
 }
 
 /** Formats [publishedAt] like "Jun 1, 2026" in the user's locale and time zone. */
