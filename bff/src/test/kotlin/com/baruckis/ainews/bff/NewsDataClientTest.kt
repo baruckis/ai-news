@@ -88,6 +88,30 @@ class NewsDataClientTest {
         }
 
     @Test
+    fun `normalises the free-tier content sentinel and blank content to null`() =
+        runTest {
+            val json =
+                """
+                {"status":"success","results":[
+                  {"article_id":"s1","title":"t","link":"https://news/10","pubDate":"2026-06-02 00:00:00",
+                   "content":"ONLY AVAILABLE IN PAID PLANS"},
+                  {"article_id":"s2","title":"t","link":"https://news/11","pubDate":"2026-06-02 00:00:00",
+                   "content":"  only available in paid plans  "},
+                  {"article_id":"s3","title":"t","link":"https://news/12","pubDate":"2026-06-02 00:00:00",
+                   "content":"   "},
+                  {"article_id":"s4","title":"t","link":"https://news/13","pubDate":"2026-06-02 00:00:00",
+                   "content":"Real full text"}
+                ]}
+                """.trimIndent()
+            val articles = clientRespondingBy { json }.fetchAiNews(null).articles
+
+            assertNull(articles.single { it.id.value == "s1" }.content)
+            assertNull(articles.single { it.id.value == "s2" }.content)
+            assertNull(articles.single { it.id.value == "s3" }.content)
+            assertEquals("Real full text", articles.single { it.id.value == "s4" }.content)
+        }
+
+    @Test
     fun `drops articles missing required id, title or url`() =
         runTest {
             val json =
