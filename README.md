@@ -3,6 +3,7 @@
 [![CI](https://github.com/baruckis/ai-news/actions/workflows/ci.yml/badge.svg)](https://github.com/baruckis/ai-news/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/baruckis/ai-news/branch/main/graph/badge.svg)](https://codecov.io/gh/baruckis/ai-news)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/baruckis/ai-news)](https://github.com/baruckis/ai-news/releases/latest)
 
 An open-source Android app that shows real AI news: list → tap → detail. A small, deliberately
 polished demo of a modern Android engineering stack — built in public, stage by stage, each
@@ -15,6 +16,25 @@ stage reviewed before merge.
 | ![News list on a phone](docs/screenshots/phone-list.png) | ![Article detail on a phone](docs/screenshots/phone-detail.png) | ![Two-pane layout on a tablet](docs/screenshots/tablet.png) |
 
 ![Tapping an article in the list opens its detail](docs/demo.gif)
+
+## Download / Try it
+
+[![Download APK](https://img.shields.io/badge/Download-APK-6C5CE7?logo=android&logoColor=white)](https://github.com/baruckis/ai-news/releases/latest/download/ai-news.apk)
+[![▶ Try in browser](https://img.shields.io/badge/%E2%96%B6%20Try%20in%20browser-Appetize.io-2496ED)](https://appetize.io/app/REPLACE_WITH_APPETIZE_PUBLIC_KEY)
+
+- **Download the APK** (Android 8.0+): grab
+  [`ai-news.apk` from the latest release](https://github.com/baruckis/ai-news/releases/latest/download/ai-news.apk),
+  or scan the QR code below with your phone. Because the app ships outside the Play
+  Store, Android will ask you to allow installs from your browser ("Install unknown
+  apps") — confirm once and tap **Install**.
+- **▶ Try in browser** — the Appetize.io badge above streams the app from an emulator,
+  no device or install needed.
+
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;data=https%3A%2F%2Fgithub.com%2Fbaruckis%2Fai-news%2Freleases%2Flatest%2Fdownload%2Fai-news.apk" alt="QR code linking to the latest APK download" width="180" height="180">
+
+Releases are automated: pushing a `v*` tag builds, signs and publishes the APK with a
+changelog generated from conventional commits — versionName/versionCode are derived from
+the tag. See [deploy/RELEASE.md](deploy/RELEASE.md) and [deploy/DEMO.md](deploy/DEMO.md).
 
 ## Tech stack
 
@@ -211,6 +231,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 9** — Polish, adaptive layout, accessibility
 - [x] **Stage 10** — Performance: Compose stability, baseline profiles and macrobenchmarks
 - [x] **Stage 11** — Documentation (architecture docs, diagrams, screenshots) and final QA
+- [x] **Stage 12** — Release & distribution (signed APK on GitHub Releases, QR download, Appetize demo)
 
 ## Contributing
 
