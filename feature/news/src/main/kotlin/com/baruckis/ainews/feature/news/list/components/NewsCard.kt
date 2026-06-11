@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import com.baruckis.ainews.core.designsystem.components.AppText
@@ -21,6 +22,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.baruckis.ainews.core.designsystem.R as DesignSystemR
 
 private const val IMAGE_ASPECT_RATIO = 16f / 9f
 private const val TITLE_MAX_LINES = 2
@@ -44,19 +46,24 @@ fun NewsCard(
         border = BorderStroke(HairlineBorderWidth, AppTheme.colors.border),
     ) {
         Column {
-            if (article.imageUrl != null) {
-                AsyncImage(
-                    model = article.imageUrl,
-                    // Decorative: the headline below carries the article's meaning.
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(IMAGE_ASPECT_RATIO)
-                            .background(AppTheme.colors.surfaceSecondary),
-                )
-            }
+            // Always rendered: a missing or failed image falls back to the branded
+            // placeholder instead of collapsing the slot.
+            val placeholder = painterResource(DesignSystemR.drawable.img_article_placeholder)
+            AsyncImage(
+                model = article.imageUrl,
+                // Decorative (placeholder included): the headline below carries the
+                // article's meaning.
+                contentDescription = null,
+                placeholder = placeholder,
+                error = placeholder,
+                fallback = placeholder,
+                contentScale = ContentScale.Crop,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(IMAGE_ASPECT_RATIO)
+                        .background(AppTheme.colors.surfaceSecondary),
+            )
             Column(modifier = Modifier.padding(AppTheme.grid.m)) {
                 AppText(
                     text = article.title,

@@ -95,7 +95,7 @@ class NewsDataClient(
             id = ID(identifier),
             title = headline,
             description = description,
-            content = content,
+            content = normalizeContent(content),
             imageUrl = imageUrl,
             sourceName = sourceName ?: sourceId ?: UNKNOWN_SOURCE,
             author = creator?.firstOrNull(),
@@ -112,7 +112,7 @@ class NewsDataClient(
             id = ID(articleUrl),
             title = headline,
             description = description,
-            content = content,
+            content = normalizeContent(content),
             imageUrl = image,
             sourceName = source?.name ?: UNKNOWN_SOURCE,
             author = null,
@@ -130,6 +130,17 @@ class NewsDataClient(
         private const val LANGUAGE = "en"
         private const val STATUS_SUCCESS = "success"
         private const val UNKNOWN_SOURCE = "Unknown"
+
+        // NewsData.io's free tier replaces the full text with this sentinel string.
+        private const val PAID_PLAN_SENTINEL = "ONLY AVAILABLE IN PAID PLANS"
+
+        /**
+         * Normalizes provider quirks out of the article content: the free-tier paid-plan
+         * sentinel (in any letter case) and blank strings become null, so clients only
+         * ever see real content or its absence — never provider-specific markers.
+         */
+        private fun normalizeContent(raw: String?): String? =
+            raw?.takeUnless { it.isBlank() || it.trim().equals(PAID_PLAN_SENTINEL, ignoreCase = true) }
 
         // NewsData.io returns timestamps as "yyyy-MM-dd HH:mm:ss" in UTC.
         private val NEWSDATA_DATE_FORMAT: DateTimeFormatter =

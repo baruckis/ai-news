@@ -111,7 +111,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 6** — `:feature:news` data + domain
 - [x] **Stage 7** — News list screen
 - [x] **Stage 8** — Article detail + Navigation 3
-- [ ] **Stage 9** — Polish, adaptive layout, accessibility
+- [x] **Stage 9** — Polish, adaptive layout, accessibility
 
 This README will grow with architecture diagrams, screenshots and setup instructions as the
 stages land.
