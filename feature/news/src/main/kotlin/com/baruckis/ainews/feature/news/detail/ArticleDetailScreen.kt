@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
@@ -31,7 +32,6 @@ import com.baruckis.ainews.feature.news.domain.model.NewsError
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 private const val IMAGE_ASPECT_RATIO = 16f / 9f
 
@@ -169,10 +169,14 @@ private fun ArticleContent(
 
 /** Formats [publishedAt] like "Jun 1, 2026" in the user's locale and time zone. */
 @Composable
-private fun rememberFormattedDate(publishedAt: Instant): String =
-    remember(publishedAt) {
+private fun rememberFormattedDate(publishedAt: Instant): String {
+    // Read the locale reactively (and key the cache on it) so a runtime language change
+    // reformats the date instead of showing a stale value.
+    val locale = LocalConfiguration.current.locales[0]
+    return remember(publishedAt, locale) {
         DateTimeFormatter
-            .ofPattern("MMM d, yyyy", Locale.getDefault())
+            .ofPattern("MMM d, yyyy", locale)
             .withZone(ZoneId.systemDefault())
             .format(publishedAt)
     }
+}

@@ -32,7 +32,8 @@ class ArticleDetailViewModel
         }
 
         private fun load(id: String) {
-            // The navigation layer re-sends Load on every (re)composition of the entry;
+            // Guard against duplicate Load intents (e.g. deep-link to the same article twice
+            // or the entry being remounted while the same id is in the back stack):
             // skip the round trip when the requested article is already on screen.
             val alreadyShown =
                 currentState.articleId == id && currentState.article != null && currentState.error == null
