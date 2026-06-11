@@ -1,3 +1,4 @@
+import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -11,15 +12,65 @@ plugins {
     alias(libs.plugins.baselineprofile)
 }
 
-// GRAPHQL_URL is read from local.properties (never committed). The emulator-localhost
-// default is only a fallback so the project still builds without a local.properties file.
-val graphqlUrl: String =
+// Local, never-committed configuration (secrets, endpoint overrides).
+val localProperties: Properties =
     Properties().apply {
         val file = rootProject.file("local.properties")
         if (file.exists()) {
             file.inputStream().use { load(it) }
         }
-    }.getProperty("GRAPHQL_URL") ?: "http://10.0.2.2:8080/graphql"
+    }
+
+// GRAPHQL_URL comes from the environment (release CI) or local.properties (never
+// committed). The emulator-localhost default is only a fallback so the project still
+// builds without either.
+val graphqlUrl: String =
+    System.getenv("GRAPHQL_URL")
+        ?: localProperties.getProperty("GRAPHQL_URL")
+        ?: "http://10.0.2.2:8080/graphql"
+
+// App version is derived from the latest semantic-version git tag: v1.2.3 → versionName
+// "1.2.3" / versionCode 1_002_003 (room for 999 minors and patches each). Commits after
+// the tag get a describe suffix ("1.2.3-4-gabc1234"); tagless checkouts fall back to a
+// pre-release default.
+val gitDescribe: String =
+    providers
+        .exec {
+            commandLine("git", "describe", "--tags", "--match", "v[0-9]*")
+            isIgnoreExitValue = true
+        }.standardOutput.asText
+        .get()
+        .trim()
+val appVersionName: String = gitDescribe.removePrefix("v").ifEmpty { "0.1.0" }
+val appVersionCode: Int =
+    Regex("""^(\d+)\.(\d+)\.(\d+)""")
+        .find(appVersionName)
+        ?.destructured
+        ?.let { (major, minor, patch) ->
+            major.toInt() * 1_000_000 + minor.toInt() * 1_000 + patch.toInt()
+        } ?: 1
+
+// Release signing comes from CI env vars (populated by GitHub Secrets) or, locally, from
+// the same keys in local.properties plus SIGNING_KEYSTORE_PATH. Without a keystore (a
+// contributor without secrets) the release build stays unsigned but still assembles.
+fun signingProperty(name: String): String? = System.getenv(name) ?: localProperties.getProperty(name)
+
+val signingKeystore: File? =
+    System.getenv("SIGNING_KEYSTORE_BASE64")
+        ?.let { base64 ->
+            layout.buildDirectory
+                .file("signing/release.jks")
+                .get()
+                .asFile
+                .apply {
+                    parentFile.mkdirs()
+                    writeBytes(Base64.getMimeDecoder().decode(base64))
+                }
+        }
+        ?: localProperties
+            .getProperty("SIGNING_KEYSTORE_PATH")
+            ?.let { rootProject.file(it) }
+            ?.takeIf { it.exists() }
 
 android {
     namespace = "com.baruckis.ainews"
@@ -29,14 +80,28 @@ android {
         applicationId = "com.baruckis.ainews"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         buildConfigField("String", "GRAPHQL_URL", "\"$graphqlUrl\"")
     }
 
+    signingConfigs {
+        if (signingKeystore != null) {
+            create("release") {
+                storeFile = signingKeystore
+                storePassword = signingProperty("SIGNING_STORE_PASSWORD")
+                keyAlias = signingProperty("SIGNING_KEY_ALIAS")
+                keyPassword = signingProperty("SIGNING_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            // Signed only when a keystore is available (CI secrets or local.properties);
+            // null keeps the unsigned-but-buildable fallback for contributors.
+            signingConfig = signingConfigs.findByName("release")
             // R8 (full mode is the AGP default) with resource shrinking: dead code and
             // unused resources are stripped, code is optimized and obfuscated.
             isMinifyEnabled = true
