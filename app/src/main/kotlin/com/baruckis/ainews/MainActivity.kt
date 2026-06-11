@@ -1,33 +1,36 @@
 package com.baruckis.ainews
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
+import com.baruckis.ainews.core.designsystem.theme.AppTheme
+import com.baruckis.ainews.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
-/** Single-activity host that renders the Stage 0 placeholder screen. */
+/** Single-activity host: renders the Navigation 3 graph inside the app theme. */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(text = "AI News")
-                    }
-                }
+            AppTheme {
+                AppNavigation(onOpenUrl = ::openInCustomTab)
             }
+        }
+    }
+
+    /**
+     * Opens [url] in a Chrome Custom Tab. URL opening lives at the Activity layer on
+     * purpose: ViewModels only emit an open-URL effect and stay free of Android intents.
+     */
+    private fun openInCustomTab(url: String) {
+        try {
+            CustomTabsIntent.Builder().build().launchUrl(this, url.toUri())
+        } catch (_: ActivityNotFoundException) {
+            // No browser on the device — the action is simply unavailable.
         }
     }
 }
