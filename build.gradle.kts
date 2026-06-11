@@ -20,8 +20,10 @@ plugins {
 }
 
 // Aggregate coverage from every module into the root Kover report.
-// :app is intentionally omitted — in Stage 0 it contains only entry points
-// (Application, MainActivity) and generated Hilt/Compose code, none of which is testable logic.
+// :app is intentionally omitted — it contains only entry points (Application, MainActivity)
+// and pure navigation/UI glue (Navigation 3 keys + host) with no business logic. The glue is
+// still exercised end-to-end by the Robolectric navigation integration tests in :app, but it
+// is not counted towards the coverage gate, consistent with the other generated/wiring excludes.
 dependencies {
     kover(project(":core:model"))
     kover(project(":core:mvi"))

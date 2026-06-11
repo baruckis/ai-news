@@ -1,0 +1,16 @@
+# Codecov configuration. The coverage gate itself is enforced by Kover (koverVerify >= 80%);
+# Codecov adds the badge and PR coverage diffs on top of the same uploaded report.
+
+coverage:
+  status:
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+
+# Android framework entry-point glue with no business logic, mirroring the Kover excludes:
+# MainActivity only hosts the Compose navigation graph and hands URLs to a Custom Tab. It is
+# exercised end-to-end by the Robolectric navigation integration tests, not unit-tested line
+# by line, so its lines should not count against patch coverage.
+ignore:
+  - "app/src/main/kotlin/com/baruckis/ainews/MainActivity.kt"

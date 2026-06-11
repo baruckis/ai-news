@@ -109,7 +109,7 @@ Built in numbered stages; each stage is a single reviewed pull request.
 - [x] **Stage 4** — `:core:network` (Apollo Kotlin 5, normalized cache)
 - [x] **Stage 5** — `:core:mvi` + `:core:model`
 - [x] **Stage 6** — `:feature:news` data + domain
-- [ ] **Stage 7** — News list screen
+- [x] **Stage 7** — News list screen
 - [ ] **Stage 8** — Article detail + Navigation 3
 - [ ] **Stage 9** — Polish, adaptive layout, accessibility
 
