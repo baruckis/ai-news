@@ -75,6 +75,10 @@ kover {
                     "*Hilt_*",
                     // Preview-only helper: rendered solely by @Preview, never at runtime.
                     "*.designsystem.components.PreviewSupportKt",
+                    // Preview-only files (@Preview light/dark wrappers and their sample
+                    // data): rendered solely by Android Studio, never at runtime. The
+                    // runtime composables they wrap stay measured via Robolectric tests.
+                    "*PreviewsKt",
                     // Pure domain data holders (:core:model): no logic, only compiler-generated
                     // equals/hashCode/copy/toString. The values they carry are asserted through
                     // the data-layer mapper tests (Stage 6).
