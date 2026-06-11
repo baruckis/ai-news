@@ -24,6 +24,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
 import com.baruckis.ainews.core.designsystem.components.AppButton
 import com.baruckis.ainews.core.designsystem.components.AppText
 import com.baruckis.ainews.core.designsystem.components.AppTopBar
@@ -141,8 +143,18 @@ private fun ArticleContent(
         // Always rendered: a missing or failed hero image falls back to the branded
         // placeholder instead of collapsing the slot.
         val placeholder = painterResource(DesignSystemR.drawable.img_article_placeholder)
+        val context = LocalPlatformContext.current
         AsyncImage(
-            model = article.imageUrl,
+            // The fillMaxWidth + aspectRatio constraints below give the request an exact
+            // target size, so Coil decodes a downsampled bitmap instead of the original.
+            // Crossfade comes from the app-wide ImageLoader default (AiNewsApplication).
+            model =
+                remember(context, article.imageUrl) {
+                    ImageRequest
+                        .Builder(context)
+                        .data(article.imageUrl)
+                        .build()
+                },
             // Decorative (placeholder included): the headline below carries the
             // article's meaning.
             contentDescription = null,

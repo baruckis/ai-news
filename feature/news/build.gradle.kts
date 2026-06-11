@@ -45,6 +45,22 @@ kotlin {
     }
 }
 
+composeCompiler {
+    // Strong skipping (skippable composables even with unstable params, memoized lambdas)
+    // is enabled by default on this compiler version; the compiler warns if it is also
+    // requested explicitly, so it is not repeated here. The reports under
+    // docs/compose-metrics/ confirm it is active.
+    // Marks the pure-Kotlin :core:model classes (and java.time.Instant) as stable without
+    // adding a Compose dependency to the domain module.
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose/stability.conf"))
+    // Opt-in (slows compilation): -PcomposeCompilerReports writes the stability/skippability
+    // reports consumed into docs/compose-metrics/.
+    if (project.hasProperty("composeCompilerReports")) {
+        metricsDestination = layout.buildDirectory.dir("compose-compiler")
+        reportsDestination = layout.buildDirectory.dir("compose-compiler")
+    }
+}
+
 kover {
     // The aggregated root report applies the same filters, but per-module reports do NOT
     // inherit them and Codecov consumes this module's own XML — so the excludes are
@@ -80,6 +96,10 @@ dependencies {
     implementation(project(":core:mvi"))
     implementation(project(":core:network"))
     implementation(project(":core:designsystem"))
+
+    // ImmutableList is part of the public UiState API, so consumers need it on their
+    // compile classpath too.
+    api(libs.kotlinx.collections.immutable)
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

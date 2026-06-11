@@ -40,6 +40,19 @@ kotlin {
     }
 }
 
+composeCompiler {
+    // Strong skipping (skippable composables even with unstable params, memoized lambdas)
+    // is enabled by default on this compiler version; the compiler warns if it is also
+    // requested explicitly, so it is not repeated here. The reports under
+    // docs/compose-metrics/ confirm it is active.
+    // Opt-in (slows compilation): -PcomposeCompilerReports writes the stability/skippability
+    // reports consumed into docs/compose-metrics/.
+    if (project.hasProperty("composeCompilerReports")) {
+        metricsDestination = layout.buildDirectory.dir("compose-compiler")
+        reportsDestination = layout.buildDirectory.dir("compose-compiler")
+    }
+}
+
 dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

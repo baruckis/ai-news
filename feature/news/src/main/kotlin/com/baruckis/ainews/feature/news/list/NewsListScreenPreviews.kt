@@ -6,12 +6,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.feature.news.domain.model.NewsError
 import com.baruckis.ainews.feature.news.list.components.previewArticle
+import kotlinx.collections.immutable.persistentListOf
 
 // Light and dark previews for every NewsListScreen state, kept in their own file so the
 // screen file stays focused on runtime composables.
 
 private val previewArticles =
-    listOf(
+    persistentListOf(
         previewArticle,
         previewArticle.copy(id = "2", title = "Open models close the gap in coding benchmarks"),
         previewArticle.copy(id = "3", title = "EU agrees on updated AI act guidance", description = null),

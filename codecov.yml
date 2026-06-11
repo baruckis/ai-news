@@ -1,0 +1,38 @@
+# Codecov configuration. The path ignores mirror the Kover exclusions in the root
+# build.gradle.kts: infrastructure that carries no unit-testable logic stays out of the
+# coverage signal, while all real feature/core logic stays in.
+
+coverage:
+  status:
+    project:
+      default:
+        # Compare against the base commit; allow a small dip so a few uncovered
+        # infra lines never mark the PR red on their own.
+        target: auto
+        threshold: 1%
+    patch:
+      # Report patch coverage for information, but never fail the check on it —
+      # stages regularly add UI/benchmark glue that has no JVM unit tests.
+      default:
+        informational: true
+
+ignore:
+  # Macrobenchmarks + baseline-profile generator: instrumentation that runs on a managed
+  # device, never measured by JVM unit tests (module is also outside the Kover aggregate).
+  - "benchmark/**"
+  # Android entry points (excluded from Kover): no testable logic, exercised end-to-end
+  # by the Robolectric navigation tests instead.
+  - "app/src/main/kotlin/com/baruckis/ainews/AiNewsApplication.kt"
+  - "app/src/main/kotlin/com/baruckis/ainews/MainActivity.kt"
+  # Generated baseline profile shipped with the release build.
+  - "app/src/release/**"
+  # BFF composition root: server bootstrap + environment wiring.
+  - "bff/src/main/kotlin/com/baruckis/ainews/bff/Main.kt"
+  # Hilt DI wiring modules (mirrors the *.di.* Kover excludes).
+  - "**/di/**"
+  # Preview-only files: rendered solely by Android Studio, never at runtime.
+  - "**/*Previews.kt"
+  - "core/designsystem/src/main/kotlin/com/baruckis/ainews/core/designsystem/components/PreviewSupport.kt"
+  # Pure domain data holders: compiler-generated members only, values asserted through
+  # the data-layer mapper tests.
+  - "core/model/**"

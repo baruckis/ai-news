@@ -27,6 +27,16 @@ androidxHilt = "1.3.0"
 # (same blocker as the Kotlin 2.4 upgrade itself); 3.4.0 is the newest Kotlin-2.3 build.
 coil = "3.4.0"
 
+# Compose stability: immutable collections carried by UiState so list params are skippable.
+kotlinxCollectionsImmutable = "0.5.0"
+
+# Performance: Macrobenchmark + Baseline Profile generation on Gradle Managed Devices.
+# 1.5.0-alpha is required for AGP 9 (1.4.x rejects AGP 9 application modules).
+benchmark = "1.5.0-alpha06"
+profileinstaller = "1.4.1"
+uiautomator = "2.3.0"
+androidxTestExtJunit = "1.3.0"
+
 # GraphQL client (Apollo Kotlin). The normalized cache, scalar adapters and mock server
 # live in their own repositories and are versioned independently of the main artifacts.
 apollo = "5.0.0"
@@ -92,6 +102,15 @@ compose-material-icons-core = { module = "androidx.compose.material:material-ico
 compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
+# Immutable collections (pure Kotlin; the Compose compiler treats them as stable)
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+
+# Performance (Macrobenchmark, Baseline Profiles)
+androidx-benchmark-macro-junit4 = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "benchmark" }
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
+
 # Coroutines
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -148,6 +167,10 @@ detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+# Self-instrumenting test module type used by :benchmark.
+android-test = { id = "com.android.test", version.ref = "agp" }
+# Generates baseline-prof.txt from the :benchmark generator and wires it into :app's release.
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "benchmark" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }

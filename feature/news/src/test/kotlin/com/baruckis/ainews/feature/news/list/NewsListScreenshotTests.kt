@@ -13,6 +13,7 @@ import com.baruckis.ainews.feature.news.domain.model.NewsError
 import com.baruckis.ainews.feature.news.list.components.NewsCard
 import com.github.takahirom.roborazzi.RoborazziOptions
 import com.github.takahirom.roborazzi.captureRoboImage
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,7 +32,7 @@ abstract class NewsScreenshotTest {
 
     /** Fixed sample data so captures stay pixel-identical between runs. */
     protected val screenshotArticles =
-        listOf(
+        persistentListOf(
             ArticleSummary(
                 id = "1",
                 title = "AI breakthrough promises faster on-device inference for everyone",

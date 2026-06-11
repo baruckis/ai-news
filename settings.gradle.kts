@@ -30,3 +30,5 @@ include(":core:designsystem")
 include(":core:testing")
 include(":feature:news")
 include(":bff")
+// Macrobenchmarks + baseline-profile generator for :app (instrumentation, not unit-tested code).
+include(":benchmark")

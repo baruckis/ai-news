@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.core.model.ArticleSummary
+import kotlinx.collections.immutable.toImmutableList
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +38,7 @@ class NewsListScreenStateRestorationTest {
                 sourceName = "Source",
                 publishedAt = Instant.parse("2026-06-01T10:00:00Z"),
             )
-        }
+        }.toImmutableList()
 
     @Test
     fun scrollPosition_survivesStateRestoration() {

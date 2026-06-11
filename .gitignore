@@ -15,6 +15,8 @@ bin/
 gen/
 out/
 release/
+# …but the committed baseline profile lives under app/src/release — keep that source set.
+!app/src/release/
 
 # Gradle files
 .gradle/

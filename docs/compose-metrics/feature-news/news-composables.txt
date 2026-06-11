@@ -1,0 +1,75 @@
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreen(
+  stable state: ArticleDetailState
+  stable onIntent: Function1<ArticleDetailIntent, Unit>
+  stable onBack: Function0<Unit>?
+  stable modifier: Modifier? = @static <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.BackButton(
+  stable onBack: Function0<Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.LoadingPlaceholder()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ErrorContent(
+  error: NewsError
+  stable onRetry: Function0<Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleContent(
+  stable article: Article
+  stable onReadAtSource: Function0<Unit>
+)
+fun com.baruckis.ainews.feature.news.detail.rememberFormattedDate(
+  stable publishedAt: Instant
+): String
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenPreview(
+  stable state: ArticleDetailState
+  stable darkTheme: Boolean
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenContentLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenContentDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenLoadingLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenLoadingDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenErrorLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.detail.ArticleDetailScreenErrorDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreen(
+  stable state: NewsListState
+  stable onIntent: Function1<NewsListIntent, Unit>
+  stable modifier: Modifier? = @static <expression>
+  stable snackbarHostState: SnackbarHostState? = @static <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.RefreshableContent(
+  stable state: NewsListState
+  stable listState: LazyListState
+  stable onIntent: Function1<NewsListIntent, Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.LoadingSkeletons()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.ErrorContent(
+  error: NewsError
+  stable onRetry: Function0<Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.EmptyContent()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.ArticleList(
+  stable articles: ImmutableList<ArticleSummary>
+  stable listState: LazyListState
+  stable onIntent: Function1<NewsListIntent, Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenPreview(
+  stable state: NewsListState
+  stable darkTheme: Boolean
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenContentLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenContentDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenLoadingLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenLoadingDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenErrorLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenErrorDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenEmptyLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.NewsListScreenEmptyDarkPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.components.NewsCard(
+  stable article: ArticleSummary
+  stable onClick: Function0<Unit>
+  stable modifier: Modifier? = @static <expression>
+)
+fun com.baruckis.ainews.feature.news.list.components.rememberFormattedDate(
+  stable publishedAt: Instant
+): String
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.components.NewsCardLightPreview()
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.feature.news.list.components.NewsCardDarkPreview()

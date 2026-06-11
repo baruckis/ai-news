@@ -1,0 +1,30 @@
+unstable class com.baruckis.ainews.AiNewsApplication {
+  <runtime stability> = Unstable
+}
+unstable class com.baruckis.ainews.MainActivity {
+  <runtime stability> = Unstable
+}
+stable class com.baruckis.ainews.navigation.NewsList {
+  <runtime stability> = Stable
+}
+unstable class com.baruckis.ainews.navigation.ArticleDetail.$serializer {
+  unstable val descriptor: SerialDescriptor
+  <runtime stability> = Unstable
+}
+stable class com.baruckis.ainews.navigation.ArticleDetail {
+  stable val id: String
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.navigation.TwoPaneScene {
+  stable val listEntry: NavEntry<T>
+  stable val detailEntry: NavEntry<T>?
+  unstable val previousEntries: List<NavEntry<T>>
+  unstable val key: Any
+  unstable val entries: List<NavEntry<T>>
+  stable val content: Function2<Composer, Int, Unit>
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.navigation.TwoPaneSceneStrategy {
+  stable val isTwoPane: Boolean
+  <runtime stability> = Stable
+}

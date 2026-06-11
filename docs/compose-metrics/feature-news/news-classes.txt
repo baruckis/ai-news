@@ -1,0 +1,82 @@
+stable class com.baruckis.ainews.feature.news.data.NewsMapper {
+  <runtime stability> = Stable
+}
+unstable class com.baruckis.ainews.feature.news.data.NewsRepositoryImpl {
+  unstable val api: GqlApiLayer
+  stable val mapper: NewsMapper
+  <runtime stability> = Unstable
+}
+stable class com.baruckis.ainews.feature.news.detail.ArticleDetailEffect.OpenUrl {
+  stable val url: String
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.detail.ArticleDetailIntent.Load {
+  stable val id: String
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.detail.ArticleDetailIntent.OpenSource {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.detail.ArticleDetailReducer {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.detail.ArticleDetailState {
+  stable val articleId: String?
+  stable val article: Article?
+  stable val isLoading: Boolean
+  runtime val error: NewsError?
+}
+unstable class com.baruckis.ainews.feature.news.detail.ArticleDetailViewModel {
+  runtime val getArticle: GetArticleUseCase
+  unstable val savedStateHandle: SavedStateHandle
+  unstable var loadJob: Job?
+  <runtime stability> = Unstable
+}
+stable class com.baruckis.ainews.feature.news.domain.model.NewsError.Network {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.domain.model.NewsError.Unknown {
+  <runtime stability> = Stable
+}
+runtime class com.baruckis.ainews.feature.news.domain.usecase.GetAiNewsUseCase {
+  runtime val repository: NewsRepository
+  <runtime stability> = Uncertain(NewsRepository)
+}
+runtime class com.baruckis.ainews.feature.news.domain.usecase.GetArticleUseCase {
+  runtime val repository: NewsRepository
+  <runtime stability> = Uncertain(NewsRepository)
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListEffect.NavigateToDetail {
+  stable val id: String
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListEffect.ShowOfflineSnackbar {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListIntent.Load {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListIntent.Refresh {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListIntent.Retry {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListIntent.ArticleClicked {
+  stable val id: String
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListReducer {
+  <runtime stability> = Stable
+}
+stable class com.baruckis.ainews.feature.news.list.NewsListState {
+  stable val articles: ImmutableList<ArticleSummary>
+  stable val isLoading: Boolean
+  stable val isRefreshing: Boolean
+  runtime val error: NewsError?
+}
+unstable class com.baruckis.ainews.feature.news.list.NewsListViewModel {
+  runtime val getAiNews: GetAiNewsUseCase
+  unstable var loadJob: Job?
+  <runtime stability> = Unstable
+}

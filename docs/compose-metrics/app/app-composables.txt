@@ -1,0 +1,14 @@
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.navigation.AppNavigation(
+  stable onOpenUrl: Function1<String, Unit>
+  stable modifier: Modifier? = @static <expression>
+  backStack: NavBackStack<NavKey>? = @dynamic <expression>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.navigation.NewsListEntry(
+  backStack: NavBackStack<NavKey>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.navigation.ArticleDetailEntry(
+  stable key: ArticleDetail
+  stable onBack: Function0<Unit>?
+  stable onOpenUrl: Function1<String, Unit>
+)
+restartable skippable scheme("[androidx.compose.ui.UiComposable]") fun com.baruckis.ainews.navigation.NoArticleSelectedPane()

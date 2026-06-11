@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.core.model.ArticleSummary
 import com.baruckis.ainews.feature.news.domain.model.NewsError
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +39,7 @@ class NewsListScreenTest {
             .format(publishedAt)
 
     private val articles =
-        listOf(
+        persistentListOf(
             ArticleSummary(
                 id = "1",
                 title = "First headline",
