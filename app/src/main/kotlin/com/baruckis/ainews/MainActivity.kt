@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
 import com.baruckis.ainews.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Compat splash (Core SplashScreen API): shows the branded icon until the first
+        // frame is drawn, then hands over to the post-splash theme. Must precede super.
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {

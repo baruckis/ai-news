@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand accent (#6C5CE7); must match AppColors.accent in :core:designsystem. -->
+    <color name="brand_accent">#6C5CE7</color>
+    <!-- Background layer of the adaptive launcher icon. -->
+    <color name="ic_launcher_background">#6C5CE7</color>
+</resources>

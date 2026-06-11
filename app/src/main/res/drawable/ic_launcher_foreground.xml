@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Foreground of the adaptive launcher icon: a white news page with text lines and an
+     AI spark, kept inside the 66dp safe zone of the 108dp adaptive-icon canvas. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Page outline -->
+    <path
+        android:pathData="M38,36 h22 a4,4 0 0 1 4,4 v32 a4,4 0 0 1 -4,4 h-22 a4,4 0 0 1 -4,-4 v-32 a4,4 0 0 1 4,-4 z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round" />
+
+    <!-- Text lines -->
+    <path
+        android:pathData="M42,48 h14"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M42,56 h14"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M42,64 h8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- AI spark -->
+    <path
+        android:pathData="M72,26 l2.6,6.4 6.4,2.6 -6.4,2.6 -2.6,6.4 -2.6,-6.4 -6.4,-2.6 6.4,-2.6 z"
+        android:fillColor="#FFFFFFFF" />
+</vector>
