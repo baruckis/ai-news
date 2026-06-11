@@ -1,12 +1,14 @@
 package com.baruckis.ainews.core.designsystem.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
+import com.baruckis.ainews.core.designsystem.theme.MinTouchTargetSize
 
 /**
  * Primary action button of the design system. Uses the accent color, the button shape
@@ -24,7 +26,8 @@ fun AppButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier,
+        // Accessible touch target: never smaller than 48dp regardless of font scale.
+        modifier = modifier.heightIn(min = MinTouchTargetSize),
         enabled = enabled,
         shape = AppTheme.shapes.button,
         colors =
