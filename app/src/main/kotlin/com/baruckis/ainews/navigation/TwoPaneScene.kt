@@ -110,10 +110,12 @@ private fun NoArticleSelectedPane() {
 /**
  * [SceneStrategy] that maps the back stack to a [TwoPaneScene] when [isTwoPane] is true
  * (expanded window widths): the bottom list entry stays visible on the left while the
- * topmost detail entry — if any — fills the right pane.
+ * detail entry on top of it — if any — fills the right pane.
  *
- * Returns null on compact widths so NavDisplay falls back to the single-pane strategy,
- * keeping the phone behaviour untouched.
+ * Only the two stack shapes this strategy owns are handled: a bare list entry, or the
+ * list with one detail entry on top. Anything else — compact widths, or a future third
+ * destination pushed above the detail — returns null so NavDisplay falls back to the
+ * single-pane strategy instead of mis-rendering an arbitrary top entry as a pane.
  */
 class TwoPaneSceneStrategy<T : Any>(
     /** Whether the current window is wide enough for the side-by-side layout. */
@@ -121,15 +123,15 @@ class TwoPaneSceneStrategy<T : Any>(
 ) : SceneStrategy<T> {
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): Scene<T>? {
         if (!isTwoPane) return null
-        val listEntry = entries.firstOrNull() ?: return null
-        if (!TwoPaneScene.isListPane(listEntry)) return null
-        val detailEntry = entries.lastOrNull()?.takeIf { TwoPaneScene.isDetailPane(it) }
-        return TwoPaneScene(
-            listEntry = listEntry,
-            detailEntry = detailEntry,
-            // Popping the detail keeps the list pane on screen; popping the bare list
-            // leaves the app, hence no previous entries in that case.
-            previousEntries = if (detailEntry != null) entries.dropLast(1) else emptyList(),
-        )
+        val listEntry = entries.firstOrNull()?.takeIf { TwoPaneScene.isListPane(it) } ?: return null
+        return when {
+            // The bare list: the detail pane shows the no-selection placeholder. Popping
+            // it leaves the app, hence no previous entries.
+            entries.size == 1 -> TwoPaneScene(listEntry, detailEntry = null, previousEntries = emptyList())
+            // The expected list + detail pair: popping the detail keeps the list pane.
+            entries.size == 2 && TwoPaneScene.isDetailPane(entries[1]) ->
+                TwoPaneScene(listEntry, detailEntry = entries[1], previousEntries = listOf(listEntry))
+            else -> null
+        }
     }
 }

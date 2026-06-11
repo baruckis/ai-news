@@ -149,15 +149,16 @@ private fun ArticleDetailEntry(
 }
 
 /**
- * Shows the article with [id]: replaces the top detail entry when one is already visible
- * (selecting another article in the two-pane layout) and pushes a new entry otherwise,
- * so back always returns to the list instead of walking through every viewed article.
+ * Shows the article with [id]: replaces the top detail entry when a different one is
+ * already visible (selecting another article in the two-pane layout) and pushes a new
+ * entry otherwise, so back always returns to the list instead of walking through every
+ * viewed article. Re-selecting the article already on top is a no-op, avoiding a
+ * redundant back-stack write and the recomposition it would trigger.
  */
 private fun NavBackStack<NavKey>.showDetail(id: String) {
-    if (lastOrNull() is ArticleDetail) {
-        this[lastIndex] = ArticleDetail(id)
-    } else {
-        add(ArticleDetail(id))
+    when (val top = lastOrNull()) {
+        is ArticleDetail -> if (top.id != id) this[lastIndex] = ArticleDetail(id)
+        else -> add(ArticleDetail(id))
     }
 }
 
