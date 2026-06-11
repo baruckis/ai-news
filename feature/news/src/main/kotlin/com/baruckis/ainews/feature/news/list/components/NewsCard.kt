@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
 import com.baruckis.ainews.core.designsystem.components.AppText
 import com.baruckis.ainews.core.designsystem.theme.AppTheme
@@ -97,35 +96,3 @@ private fun rememberFormattedDate(publishedAt: Instant): String =
             .withZone(ZoneId.systemDefault())
             .format(publishedAt)
     }
-
-internal val previewArticle =
-    ArticleSummary(
-        id = "1",
-        title = "AI breakthrough promises faster on-device inference for everyone",
-        description =
-            "Researchers unveiled a compact model architecture that runs " +
-                "state-of-the-art inference on ordinary phones.",
-        imageUrl = null,
-        sourceName = "TechWire",
-        publishedAt = Instant.parse("2026-06-01T10:00:00Z"),
-    )
-
-@Preview(name = "NewsCard light")
-@Composable
-private fun NewsCardLightPreview() {
-    AppTheme(darkTheme = false) {
-        Surface(color = AppTheme.colors.surfacePrimary) {
-            NewsCard(article = previewArticle, onClick = {}, modifier = Modifier.padding(AppTheme.grid.m))
-        }
-    }
-}
-
-@Preview(name = "NewsCard dark")
-@Composable
-private fun NewsCardDarkPreview() {
-    AppTheme(darkTheme = true) {
-        Surface(color = AppTheme.colors.surfacePrimary) {
-            NewsCard(article = previewArticle, onClick = {}, modifier = Modifier.padding(AppTheme.grid.m))
-        }
-    }
-}

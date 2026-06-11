@@ -56,6 +56,11 @@ kover {
                     // DI wiring (@Binds module) and its Dagger-generated companions;
                     // no testable logic.
                     "com.baruckis.ainews.feature.news.di.*",
+                    // Preview-only files (@Preview light/dark wrappers and their sample
+                    // data): rendered solely by Android Studio, never at runtime. The
+                    // runtime composables they wrap stay measured via Robolectric tests.
+                    "*PreviewsKt",
+                    "*ComposableSingletons*",
                     "*_Factory",
                     "*_Factory\$*",
                     "*_HiltModules*",
