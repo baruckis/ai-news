@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Branded placeholder for article images (loading, failed or missing): the AI News
+     news-page glyph on the brand accent, in the 16:9 ratio the image slots use.
+     The accent (#6C5CE7) matches AppColors.accent and is shared by both themes. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="90dp"
+    android:viewportWidth="160"
+    android:viewportHeight="90">
+
+    <!-- Brand accent background -->
+    <path
+        android:pathData="M0,0 h160 v90 h-160 z"
+        android:fillColor="#FF6C5CE7" />
+
+    <!-- Page outline -->
+    <path
+        android:pathData="M60.5,30 h22 a4,4 0 0 1 4,4 v32 a4,4 0 0 1 -4,4 h-22 a4,4 0 0 1 -4,-4 v-32 a4,4 0 0 1 4,-4 z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineJoin="round" />
+
+    <!-- Text lines -->
+    <path
+        android:pathData="M64.5,42 h14"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M64.5,50 h14"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M64.5,58 h8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- AI spark -->
+    <path
+        android:pathData="M94.5,20 l2.6,6.4 6.4,2.6 -6.4,2.6 -2.6,6.4 -2.6,-6.4 -6.4,-2.6 6.4,-2.6 z"
+        android:fillColor="#FFFFFFFF" />
+</vector>
