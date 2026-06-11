@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, sign and publish the release APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # Full history and tags: versioning (git describe) and the changelog need them.
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build the signed release APK
+        env:
+          # Baked into BuildConfig — the published APK must talk to the live BFF,
+          # not the emulator-localhost fallback used for local development.
+          GRAPHQL_URL: https://ainews-api.baruckis.com/graphql
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: ./gradlew :app:assembleRelease --stacktrace
+
+      - name: Verify the APK is release-signed
+        run: |
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort | tail -n 1)"
+          "$APKSIGNER" verify --print-certs app/build/outputs/apk/release/app-release.apk
+
+      - name: Stage release assets
+        # Two copies of the same APK: a versioned name for the archive and a stable
+        # name so the README's releases/latest/download link (and its QR code) never
+        # have to change.
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk "ai-news-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/apk/release/app-release.apk ai-news.apk
+
+      - name: Generate the changelog from conventional commits
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          OUTPUT: RELEASE_NOTES.md
+
+      - name: Create the GitHub Release with the signed APK
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            ai-news-${{ github.ref_name }}.apk
+            ai-news.apk
