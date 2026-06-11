@@ -10,6 +10,8 @@ coroutines = "1.11.0"
 coreKtx = "1.17.0"
 activityCompose = "1.13.0"
 lifecycle = "2.10.0"
+# Splash screen on every API level via the compat theme (Core SplashScreen API).
+coreSplashscreen = "1.2.0"
 
 # Navigation 3 (Compose-native; the back stack is a plain observable list owned by the app).
 # The per-entry ViewModel decorator ships with lifecycle (lifecycle-viewmodel-navigation3).
@@ -62,6 +64,7 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 
 # AndroidX
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
@@ -83,6 +86,8 @@ compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
+# currentWindowAdaptiveInfo() — the WindowSizeClass behind the adaptive list-detail layout.
+compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
 compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
