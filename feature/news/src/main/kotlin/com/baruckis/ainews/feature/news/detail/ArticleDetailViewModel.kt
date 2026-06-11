@@ -49,12 +49,15 @@ class ArticleDetailViewModel
 
         private fun load(id: String) {
             savedStateHandle[SAVED_ARTICLE_ID_KEY] = id
-            // Guard against duplicate Load intents (e.g. deep-link to the same article twice
-            // or the entry being remounted while the same id is in the back stack):
-            // skip the round trip when the requested article is already on screen.
-            val alreadyShown =
-                currentState.articleId == id && currentState.article != null && currentState.error == null
-            if (alreadyShown) return
+            // Guard against duplicate Load intents: skip the round trip when the requested
+            // article is already on screen, or when a load for the same id is in flight —
+            // e.g. the UI's LaunchedEffect re-sending Load for the id this ViewModel just
+            // started restoring in init, which would otherwise fetch the article twice.
+            val alreadyHandled =
+                currentState.articleId == id &&
+                    currentState.error == null &&
+                    (currentState.article != null || currentState.isLoading)
+            if (alreadyHandled) return
             // Single-flight: a newer Load cancels an in-flight one, so a slow stale
             // response can never overwrite the newer request's result.
             loadJob?.cancel()

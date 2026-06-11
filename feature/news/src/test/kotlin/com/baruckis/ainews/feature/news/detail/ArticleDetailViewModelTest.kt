@@ -216,6 +216,24 @@ class ArticleDetailViewModelTest {
         }
 
     @Test
+    fun `a Load for the id already being loaded does not restart the round trip`() =
+        runTest(testDispatcher) {
+            repository.articleResult = RequestResult.Success(article)
+            repository.gate = CompletableDeferred()
+            // Recreated after process death: init starts loading the restored id...
+            val viewModel = viewModel(SavedStateHandle(mapOf("articleId" to "42")))
+
+            // ...and the UI's LaunchedEffect re-sends Load for the same id while that
+            // restore load is still in flight. It must join it, not fetch again.
+            viewModel.onIntent(ArticleDetailIntent.Load("42"))
+            repository.gate?.complete(Unit)
+
+            assertEquals(listOf("42"), repository.requestedIds)
+            assertEquals(0, repository.cancelledCalls)
+            assertEquals(article, viewModel.state.value.article)
+        }
+
+    @Test
     fun `a ViewModel without saved state stays in the initial loading state`() =
         runTest(testDispatcher) {
             val viewModel = viewModel()
