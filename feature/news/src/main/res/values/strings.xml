@@ -10,6 +10,10 @@
     <string name="news_list_empty_title">No news yet</string>
     <!-- Explanatory message of the empty state. -->
     <string name="news_list_empty_message">Check back later for fresh AI stories.</string>
+    <!-- Snackbar shown when a refresh fails because the device is offline. -->
+    <string name="news_list_offline">You\'re offline. Showing the latest saved news.</string>
+    <!-- Announced by screen readers while the skeleton list is loading. -->
+    <string name="news_list_loading_a11y">Loading news</string>
 
     <!-- Title shown in the article detail top bar. -->
     <string name="article_detail_title">Article</string>
@@ -21,4 +25,6 @@
     <string name="article_detail_error_network">No connection. Check your network and try again.</string>
     <!-- Error message for any other loading failure. -->
     <string name="article_detail_error_unknown">Something went wrong while loading the article.</string>
+    <!-- Announced by screen readers while the article is loading. -->
+    <string name="article_detail_loading_a11y">Loading article</string>
 </resources>

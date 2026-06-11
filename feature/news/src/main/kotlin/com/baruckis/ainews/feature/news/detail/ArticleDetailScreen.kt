@@ -19,6 +19,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import coil3.compose.AsyncImage
 import com.baruckis.ainews.core.designsystem.components.AppButton
 import com.baruckis.ainews.core.designsystem.components.AppText
@@ -42,12 +45,15 @@ const val ARTICLE_DETAIL_LOADING_TAG = "article_detail_loading"
  * Stateless article detail screen: renders [state] and reports every user action through
  * [onIntent], except back navigation which goes straight to the navigation layer via
  * [onBack]. Business logic lives in the ViewModel, never in this composable.
+ *
+ * @param onBack invoked by the top-bar back button; pass null to hide the button (the
+ * two-pane layout keeps the list on screen, so the detail pane needs no back action).
  */
 @Composable
 fun ArticleDetailScreen(
     state: ArticleDetailState,
     onIntent: (ArticleDetailIntent) -> Unit,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -58,7 +64,7 @@ fun ArticleDetailScreen(
     ) {
         AppTopBar(
             title = stringResource(R.string.article_detail_title),
-            navigationIcon = { BackButton(onBack) },
+            navigationIcon = { onBack?.let { BackButton(it) } },
         )
         when {
             state.isLoading -> LoadingPlaceholder()
@@ -89,12 +95,16 @@ private fun BackButton(onBack: () -> Unit) {
 
 @Composable
 private fun LoadingPlaceholder() {
+    val loadingDescription = stringResource(R.string.article_detail_loading_a11y)
     Column(
         modifier =
             Modifier
                 .fillMaxSize()
                 .padding(AppTheme.grid.m)
-                .testTag(ARTICLE_DETAIL_LOADING_TAG),
+                .testTag(ARTICLE_DETAIL_LOADING_TAG)
+                // The shimmer placeholder is meaningless to screen readers; announce a
+                // single loading message instead.
+                .semantics { contentDescription = loadingDescription },
     ) {
         NewsCardSkeleton()
     }
@@ -143,6 +153,9 @@ private fun ArticleContent(
             AppText(
                 text = article.title,
                 style = AppTheme.typography.titleLarge,
+                // TalkBack treats the title as a heading, so users navigating by
+                // headings can jump straight to the article.
+                modifier = Modifier.semantics { heading() },
             )
             AppText(
                 text = "${article.sourceName} · ${rememberFormattedDate(article.publishedAt)}",

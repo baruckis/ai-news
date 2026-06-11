@@ -1,5 +1,6 @@
 package com.baruckis.ainews.feature.news.detail
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.baruckis.ainews.core.model.Article
@@ -89,7 +90,8 @@ class ArticleDetailViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun viewModel() = ArticleDetailViewModel(GetArticleUseCase(repository))
+    private fun viewModel(savedStateHandle: SavedStateHandle = SavedStateHandle()) =
+        ArticleDetailViewModel(GetArticleUseCase(repository), savedStateHandle)
 
     @Test
     fun `Load success publishes the article and ends loading`() =
@@ -195,6 +197,31 @@ class ArticleDetailViewModelTest {
             staleGate.complete(Unit)
             assertEquals(fresh, viewModel.state.value.article)
             assertEquals(listOf("stale", "fresh"), repository.requestedIds)
+        }
+
+    @Test
+    fun `a Load persists the article id so a recreated ViewModel reloads it on init`() =
+        runTest(testDispatcher) {
+            repository.articleResult = RequestResult.Success(article)
+            // Shared handle: the framework hands the same saved state to the ViewModel
+            // recreated after process death.
+            val savedStateHandle = SavedStateHandle()
+
+            viewModel(savedStateHandle).onIntent(ArticleDetailIntent.Load("42"))
+            val recreated = viewModel(savedStateHandle)
+
+            // The recreated instance restored the id and loaded without any intent.
+            assertEquals(listOf("42", "42"), repository.requestedIds)
+            assertEquals(article, recreated.state.value.article)
+        }
+
+    @Test
+    fun `a ViewModel without saved state stays in the initial loading state`() =
+        runTest(testDispatcher) {
+            val viewModel = viewModel()
+
+            assertTrue(viewModel.state.value.isLoading)
+            assertEquals(emptyList<String>(), repository.requestedIds)
         }
 
     @Test
