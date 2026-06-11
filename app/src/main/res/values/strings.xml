@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AI News</string>
+
+    <!-- Title of the detail-pane placeholder in the two-pane (tablet) layout. -->
+    <string name="two_pane_no_selection_title">No article selected</string>
+    <!-- Message of the detail-pane placeholder in the two-pane (tablet) layout. -->
+    <string name="two_pane_no_selection_message">Choose a story from the list to read it here.</string>
 </resources>
