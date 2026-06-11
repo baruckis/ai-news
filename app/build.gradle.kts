@@ -1,4 +1,3 @@
-import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -50,27 +49,18 @@ val appVersionCode: Int =
             major.toInt() * 1_000_000 + minor.toInt() * 1_000 + patch.toInt()
         } ?: 1
 
-// Release signing comes from CI env vars (populated by GitHub Secrets) or, locally, from
-// the same keys in local.properties plus SIGNING_KEYSTORE_PATH. Without a keystore (a
-// contributor without secrets) the release build stays unsigned but still assembles.
+// Release signing comes from CI env vars (release.yml decodes the keystore secret to a
+// file and passes its path as SIGNING_KEYSTORE_PATH) or, locally, from the same keys in
+// local.properties. Only a path is read here — writing the keystore at configuration
+// time would break with the configuration cache, which skips this script on a cache
+// hit. Without a keystore (a contributor without secrets) the release build stays
+// unsigned but still assembles.
 fun signingProperty(name: String): String? = System.getenv(name) ?: localProperties.getProperty(name)
 
 val signingKeystore: File? =
-    System.getenv("SIGNING_KEYSTORE_BASE64")
-        ?.let { base64 ->
-            layout.buildDirectory
-                .file("signing/release.jks")
-                .get()
-                .asFile
-                .apply {
-                    parentFile.mkdirs()
-                    writeBytes(Base64.getMimeDecoder().decode(base64))
-                }
-        }
-        ?: localProperties
-            .getProperty("SIGNING_KEYSTORE_PATH")
-            ?.let { rootProject.file(it) }
-            ?.takeIf { it.exists() }
+    signingProperty("SIGNING_KEYSTORE_PATH")
+        ?.let { rootProject.file(it) }
+        ?.takeIf { it.exists() }
 
 android {
     namespace = "com.baruckis.ainews"
