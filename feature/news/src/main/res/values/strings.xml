@@ -10,4 +10,15 @@
     <string name="news_list_empty_title">No news yet</string>
     <!-- Explanatory message of the empty state. -->
     <string name="news_list_empty_message">Check back later for fresh AI stories.</string>
+
+    <!-- Title shown in the article detail top bar. -->
+    <string name="article_detail_title">Article</string>
+    <!-- Content description of the back button in the article detail top bar. -->
+    <string name="article_detail_back">Back</string>
+    <!-- Label of the action that opens the original article in the browser. -->
+    <string name="article_detail_read_at_source">Read at source</string>
+    <!-- Error message when the backend cannot be reached. -->
+    <string name="article_detail_error_network">No connection. Check your network and try again.</string>
+    <!-- Error message for any other loading failure. -->
+    <string name="article_detail_error_unknown">Something went wrong while loading the article.</string>
 </resources>
