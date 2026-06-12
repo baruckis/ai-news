@@ -20,7 +20,7 @@ stage reviewed before merge.
 ## Download / Try it
 
 [![Download APK](https://img.shields.io/badge/Download-APK-6C5CE7?logo=android&logoColor=white)](https://github.com/baruckis/ai-news/releases/latest/download/ai-news.apk)
-[![▶ Try in browser](https://img.shields.io/badge/%E2%96%B6%20Try%20in%20browser-Appetize.io-2496ED)](https://appetize.io/app/b_f7vgwfazaphzxzioa6yq6v3qtu)
+[![▶ Try in browser](https://img.shields.io/badge/%E2%96%B6%20Try%20in%20browser-Appetize.io-2496ED)](https://appetize.io/app/b_3phfx6xzuulmb2ebtuu3p4fh2a)
 
 - **Download the APK** (Android 8.0+): grab
   [`ai-news.apk` from the latest release](https://github.com/baruckis/ai-news/releases/latest/download/ai-news.apk),
