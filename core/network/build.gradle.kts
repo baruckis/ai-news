@@ -6,15 +6,21 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-// GRAPHQL_URL is read from local.properties (never committed). The emulator-localhost
-// default is only a fallback so the project still builds without a local.properties file.
+// GRAPHQL_URL comes from the environment (release CI) or local.properties (never
+// committed). The emulator-localhost default is only a fallback so the project still
+// builds without either. This BuildConfig field is the one ApolloModule dials, so the
+// environment lookup must live here — release.yml exports GRAPHQL_URL as an env var and
+// CI has no local.properties.
 val graphqlUrl: String =
-    Properties().apply {
-        val file = rootProject.file("local.properties")
-        if (file.exists()) {
-            file.inputStream().use { load(it) }
-        }
-    }.getProperty("GRAPHQL_URL") ?: "http://10.0.2.2:8080/graphql"
+    System.getenv("GRAPHQL_URL")
+        ?: Properties()
+            .apply {
+                val file = rootProject.file("local.properties")
+                if (file.exists()) {
+                    file.inputStream().use { load(it) }
+                }
+            }.getProperty("GRAPHQL_URL")
+        ?: "http://10.0.2.2:8080/graphql"
 
 android {
     namespace = "com.baruckis.ainews.core.network"
