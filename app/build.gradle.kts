@@ -20,14 +20,6 @@ val localProperties: Properties =
         }
     }
 
-// GRAPHQL_URL comes from the environment (release CI) or local.properties (never
-// committed). The emulator-localhost default is only a fallback so the project still
-// builds without either.
-val graphqlUrl: String =
-    System.getenv("GRAPHQL_URL")
-        ?: localProperties.getProperty("GRAPHQL_URL")
-        ?: "http://10.0.2.2:8080/graphql"
-
 // App version is derived from the latest semantic-version git tag: v1.2.3 → versionName
 // "1.2.3" / versionCode 1_002_003 (room for 999 minors and patches each). Commits after
 // the tag get a describe suffix ("1.2.3-4-gabc1234"); tagless checkouts fall back to a
@@ -72,8 +64,6 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = appVersionCode
         versionName = appVersionName
-
-        buildConfigField("String", "GRAPHQL_URL", "\"$graphqlUrl\"")
     }
 
     signingConfigs {
@@ -110,7 +100,6 @@ android {
 
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 
     testOptions {
