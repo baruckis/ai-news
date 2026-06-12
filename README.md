@@ -173,31 +173,34 @@ compilation hints:
 
 The [`:benchmark`](benchmark/) Macrobenchmark module measures cold/warm startup
 (`StartupTimingMetric`) and list-fling frame timing (`FrameTimingMetric`), each with JIT only
-(`CompilationMode.None`) and with the baseline profile applied (`CompilationMode.Partial`). Both
-run on a Gradle Managed Device (Pixel 6, API 34, AOSP image), so no physical device is needed:
+(`CompilationMode.None`) and with the baseline profile applied (`CompilationMode.Partial`). They
+run on a connected physical device, or on a Gradle Managed Device (Pixel 6, API 34, AOSP image)
+when no hardware is available:
 
 ```bash
 # Generate the baseline profile (writes app/src/release/generated/baselineProfiles/).
 ./gradlew :app:generateBaselineProfile
 
-# Run the macrobenchmarks on the managed device.
+# Run the macrobenchmarks on a connected physical device.
+./gradlew :benchmark:connectedBenchmarkReleaseAndroidTest
+
+# Or on the managed device (emulator numbers — relative comparison only).
 ./gradlew :benchmark:pixel6Api34BenchmarkReleaseAndroidTest
 ```
 
-Measured on the managed device (Pixel 6 profile, API 34 AOSP emulator, Apple M4 Pro host);
-10 iterations for startup, 5 for scroll:
+Measured on a Pixel 10 (Android 16); 10 iterations for startup, 5 for scroll:
 
 | Benchmark | No profile | Baseline profile |
 | --- | --- | --- |
-| Cold startup — time to initial display (median) | 301.3 ms | 317.6 ms |
-| Warm startup — time to initial display (median) | 90.9 ms | 84.4 ms |
-| List fling — frame duration P50 | 17.7 ms | 17.9 ms |
-| List fling — frame overrun P99 | 51.1 ms | 37.6 ms |
+| Cold startup — time to initial display (median) | 254.8 ms | 232.2 ms |
+| Warm startup — time to initial display (median) | 48.8 ms | 35.9 ms |
+| List fling — frame duration P50 | 3.9 ms | 3.7 ms |
+| List fling — frame overrun P99 | -1.9 ms | -2.6 ms |
 
-> Real measurements, not estimates. On an emulator the JIT-vs-AOT gap is muted and
-> run-to-run variance is high (the cold-start medians above overlap within it), so these
-> numbers are useful for relative comparison only; baseline-profile gains are typically
-> clearer on physical hardware. Rerun the commands above to reproduce.
+> Real measurements, not estimates. The baseline profile cuts cold startup by ~9 % and warm
+> startup by ~26 %. Flinging the list stays well inside the frame budget either way — negative
+> overrun means frames finished ahead of their deadline — with the profile trimming the P99
+> tail further. Rerun the commands above to reproduce.
 
 ## Deployment
 
