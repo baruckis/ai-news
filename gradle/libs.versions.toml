@@ -61,7 +61,7 @@ junit4 = "4.13.2"
 mockk = "1.14.11"
 turbine = "1.2.1"
 robolectric = "4.16.1"
-roborazzi = "1.63.0"
+roborazzi = "1.64.0"
 
 # SDK levels
 minSdk = "26"
