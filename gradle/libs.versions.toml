@@ -45,7 +45,7 @@ apolloAdapters = "0.7.0"
 apolloMockserver = "0.3.1"
 
 # BFF (Ktor + graphql-kotlin) — Ktor pinned to the version graphql-kotlin 10 ships with.
-ktor = "3.4.1"
+ktor = "3.5.0"
 graphqlKotlin = "10.0.0"
 kotlinxSerialization = "1.9.0"
 logback = "1.5.18"
