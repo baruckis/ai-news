@@ -25,7 +25,7 @@ androidxHilt = "1.3.0"
 
 # Images — Coil 3.5.0 is compiled with Kotlin 2.4, whose metadata Hilt cannot read yet
 # (same blocker as the Kotlin 2.4 upgrade itself); 3.4.0 is the newest Kotlin-2.3 build.
-coil = "3.4.0"
+coil = "3.5.0"
 
 # Compose stability: immutable collections carried by UiState so list params are skippable.
 kotlinxCollectionsImmutable = "0.5.0"
