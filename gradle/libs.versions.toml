@@ -40,7 +40,7 @@ androidxTestExtJunit = "1.3.0"
 # GraphQL client (Apollo Kotlin). The normalized cache, scalar adapters and mock server
 # live in their own repositories and are versioned independently of the main artifacts.
 apollo = "5.0.0"
-apolloNormalizedCache = "1.0.3"
+apolloNormalizedCache = "1.0.4"
 apolloAdapters = "0.7.0"
 apolloMockserver = "0.3.1"
 
