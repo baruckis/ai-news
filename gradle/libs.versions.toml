@@ -1,6 +1,6 @@
 [versions]
 # Build / language
-agp = "9.2.1"
+agp = "9.4.1"
 kotlin = "2.3.21"
 ksp = "2.3.9"
 composeBom = "2026.05.01"
