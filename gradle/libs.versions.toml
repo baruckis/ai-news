@@ -34,7 +34,7 @@ kotlinxCollectionsImmutable = "0.5.0"
 # 1.5.0-alpha is required for AGP 9 (1.4.x rejects AGP 9 application modules).
 benchmark = "1.5.0-alpha06"
 profileinstaller = "1.4.1"
-uiautomator = "2.3.0"
+uiautomator = "2.4.0"
 androidxTestExtJunit = "1.3.0"
 
 # GraphQL client (Apollo Kotlin). The normalized cache, scalar adapters and mock server
